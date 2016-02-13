@@ -29,7 +29,16 @@ def log(message, lev):
 def safetyCheck(usr):
     # Check if userid is not a sql injection
     # Return bool
-    return True
+    if "SELECT" in usr.upper().lower():
+        return False
+    elif "FROM" in usr.upper().lower():
+        return False
+    elif "*" in usr.upper().lower():
+        return False
+    elif "WHERE" in usr.upper().lower():
+        return False
+    else:
+        return True
 
 
 def user_exist(usr):
@@ -79,8 +88,6 @@ def check_password_hash(userid, hash):
     log(("Checking password for login request by %s" % userid), 1)
     dbhash = get_hash_for_user(userid)
     dbhash = str(dbhash[0])
-    print(dbhash)
-
     if dbhash == hash:
         log("Password correct", 2)
         return True
@@ -119,8 +126,6 @@ def generate_session_key(username):
     # Return str
     log("Generating session key", 2)
     ses = random.randint(100000000, 100000000000)
-    print(len(str(ses)))
-    print(ses)
     log("Updating key in DB", 2)
     uppdate_session_key(username, ses)
     ses = str(ses)
@@ -144,9 +149,3 @@ def login_to_account(username, password):
     else:
         log("Bad login request", 2)
         return "INVAILD_LOGIN"
-
-
-
-#print(user_exist("mr7657")) #(excluded version 0.1)
-login_to_account("mr7657", "H2NsTQ$iq9qSQUcA0s6jvCqUBsztDY/RC87QJd2ODCHUDLtTSA")
-# H2NsTQ$iq9qSQUcA0s6jvCqUBsztDY/RC87QJd2ODCHUDLtTSA
