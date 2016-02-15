@@ -61,24 +61,57 @@ def create_account(username, fname, lname, email, hash):
         db.rollback()
         db.close()
         return False
-def add_confirmation_to_db():
-# Adds confirmation code to DB
-# Return bool
+def add_confirmation_to_db(code, username):
+    # Adds confirmation code to DB
+    # Return bool
+    sql = "INSERT INTO Activation_Key (Key, UserID) VALUES ('%s', '%s');" % (code, username)
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    try:
+        cursor.execute(sql)
+        log("SQL excuted correctly", 2)
+        db.commit()
+        db.close()
+        log("DB closed", 3)
+        return True
+    except:
+        db.rollback()
+        db.close()
+        return False
 
 
 def generate_confirmation_code(username):
-# Generate confirmation code
-# Return str
+    # Generate confirmation code
+    # Return str
+    chars=string.ascii_uppercase + string.digits
+    code = ''.join(random.choice(chars) for _ in range(25))
+    if add_confirmation_to_db(code):
+        return code
+    else:
+        return "ERROR_ADDING_CODE_DB"
 
 
 def send_confirmation_email(fname, email, code):
-# Sends confirmation email
-# Return bool
+    # Sends confirmation email
+    # Return bool
+    # Need more research to send email
+    return True
 
 
 def create_confirmation_email(fname, email, username):
-# Generates confirmation email, once account was created
-# Return bool
+    # Generates confirmation email, once account was created
+    # Return bool
+    code = generate_confirmation_code(username)
+    if code == "ERROR_ADDING_CODE_DB":
+        log("Unable to add code to DB, Failing", 1)
+        return False
+    if send_confirmation_email(fname, email, code):
+        log("Email sent!", 2)
+        return True
+    else:
+        log("Email failed to be sent", 2)
+        return False
 
 
 def add_new_user(username, fname, lname, email, hash):
