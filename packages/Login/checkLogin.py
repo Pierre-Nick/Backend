@@ -125,7 +125,21 @@ def check_active_status(username):
     # Checks if account has been activated
     # Return bool
     log("Check status of account", 1)
-    return True
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    sql = "SELECT IsActivated FROM User_Information WHERE User_id = '%s'" % userid
+    cursor.execute(sql)
+    log("SQL excuted correctly", 3)
+    data = cursor.fetchone()
+    db.close()
+    log("DB closed", 3)
+    if data[0] == 0:
+        log("Account not activated", 2)
+        return False
+    else:
+        log("Account activated", 2)
+        return True
 
 
 def generate_session_key(username):
@@ -146,9 +160,12 @@ def login_to_account(username, password):
     log(("Login request by ", username), 1)
     if(user_exist(username) == "ID_FOUND"):
         if(check_password_hash(username, password)):
-            log("Vaild login, generating session key", 2)
-            ses = generate_session_key(username)
-            return ses
+            if(check_active_status(username)):
+                log("Vaild login, generating session key", 2)
+                ses = generate_session_key(username)
+                return ses
+            else:
+                return "ACCOUNT_NOT_ACTIVE"
         else:
             log("Invaild login", 2)
             return "INVAILD_LOGIN"
@@ -156,9 +173,3 @@ def login_to_account(username, password):
 else:
     log("Bad login request", 2)
         return "INVAILD_LOGIN"
-
-
-
-#print(user_exist("mr7657")) #(excluded version 0.1)
-#login_to_account("mr7657", "H2NsTQ$iq9qSQUcA0s6jvCqUBsztDY/RC87QJd2ODCHUDLtTSA")
-# H2NsTQ$iq9qSQUcA0s6jvCqUBsztDY/RC87QJd2ODCHUDLtTSA
