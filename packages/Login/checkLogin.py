@@ -19,7 +19,7 @@ log_level = 3
 
 def log(message, lev):
     # Log messages
-    # Return N/A
+    # Return void
     if debug_on:
         if lev <= log_level:
             ti = str(datetime.now())
@@ -97,13 +97,13 @@ def check_password_hash(userid, hash):
 
 
 #def check_password_date(username):
-    # Check if date has past required reset date (180 days)
-    # Return bool
-    # Add in later version (1.0)
+# Check if date has past required reset date (180 days)
+# Return bool
+# Add in later version (1.0)
 
 def uppdate_session_key(username, ses):
     # Update Session key in DB
-    # Return N/A
+    # Return void
     log("DB request update session key", 1)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     log("Connected to DB", 3)
@@ -119,6 +119,13 @@ def uppdate_session_key(username, ses):
         db.rollback()
     db.close()
     log("DB closed", 3)
+
+
+def check_active_status(username):
+    # Checks if account has been activated
+    # Return bool
+    log("Check status of account", 1)
+    return True
 
 
 def generate_session_key(username):
@@ -146,6 +153,12 @@ def login_to_account(username, password):
             log("Invaild login", 2)
             return "INVAILD_LOGIN"
 
-    else:
-        log("Bad login request", 2)
+else:
+    log("Bad login request", 2)
         return "INVAILD_LOGIN"
+
+
+
+#print(user_exist("mr7657")) #(excluded version 0.1)
+#login_to_account("mr7657", "H2NsTQ$iq9qSQUcA0s6jvCqUBsztDY/RC87QJd2ODCHUDLtTSA")
+# H2NsTQ$iq9qSQUcA0s6jvCqUBsztDY/RC87QJd2ODCHUDLtTSA

@@ -21,7 +21,7 @@ def log(message, lev):
     if debug_on:
         if lev <= log_level:
             ti = str(datetime.now())
-            print("[%s]checkLogin --> %s" % (ti, message))
+            print("[%s]createAccount --> %s" % (ti, message))
 
 
 def check_if_email_exist():
@@ -29,10 +29,38 @@ def check_if_email_exist():
 
 
 def create_account(username, fname, lname, email, hash):
-# Create account and add to DB
-# Return bool
-
-
+    # Create account and add to DB
+    # Return bool
+    log("Creating Account", 1)
+    d = str(datetime.now())
+    date = datetime.today()
+    date = date + timedelta(6 * 30)
+    f_sql = "INSERT INTO User_Information (UserID, FirstName, LastName, Email, CreationDate) VALUES ('%s', '%s', '%s', '%s', '%s');" % (username, fname, lname, email, d)
+    p_sql = "INSERT INTO Password (PasswordHash, User_id, UpdatedOn) VALUES ('%s', '%s', '%s');" % (hash, username, d)
+    s_sql = "INSERT INTO Session_Key (SessionKey, UserID, AgeOffDate) VALUES ('%s', '%s', '%s');" % ('000000000', username, date)
+    
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    try:
+        cursor.execute(f_sql)
+        log("User_Information SQL completed", 3)
+        cursor.execute(p_sql)
+        log("Password SQL completed", 3)
+        cursor.execute(s_sql)
+        log("Session SQL completed", 3)
+        log("SQL excuted correctly", 2)
+        db.commit()
+        if not create_confirmation_email(fname, email, username):
+            return False
+        else:
+            db.close()
+            log("DB closed", 3)
+            return True
+    except:
+        db.rollback()
+        db.close()
+        return False
 def add_confirmation_to_db():
 # Adds confirmation code to DB
 # Return bool
