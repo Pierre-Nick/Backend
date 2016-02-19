@@ -14,6 +14,7 @@ from checkLogin import *
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+import string
 
 debug_on = True
 log_level = 3
@@ -46,7 +47,7 @@ def check_if_email_exist(email):
 def add_confirmation_to_db(code, username):
     # Adds confirmation code to DB
     # Return bool
-    sql = "INSERT INTO Activation_Key (Key, UserID) VALUES ('%s', '%s');" % (code, username)
+    sql = "INSERT INTO `KitchenWizard`.`Activation_Key` (`Key`, `UserID`) VALUES ('%s', '%s');" % (str(code), str(username))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     log("Connected to DB", 3)
     cursor = db.cursor()
@@ -60,6 +61,7 @@ def add_confirmation_to_db(code, username):
     except:
         db.rollback()
         db.close()
+        log("Error adding confirmation to DB", 1)
         return False
 
 
@@ -69,7 +71,7 @@ def generate_confirmation_code(username):
     chars=string.ascii_uppercase + string.digits
     code = ''.join(random.choice(chars) for _ in range(25))
     log("Code created", 2)
-    if add_confirmation_to_db(code):
+    if add_confirmation_to_db(code, username):
         log("Code added to DB", 2)
         return code
     else:
@@ -83,22 +85,23 @@ def send_confirmation_email(fname, email, code):
     # Need more research to send email
     # homekitchenwizzard@gmail.com
     # KitchenWizzard
+    log("Create email request", 2)
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
     server.starttls()
     server.login("homekitchenwizzard@gmail.com", "KitchenWizard")
-    login("Login to email - complete", 3)
+    log("Login to email - complete", 3)
     msg = MIMEMultipart()
     msg['From'] = "homekitchenwizzard@gmail.com"
     msg['To'] = email
     msg['Subject'] = "Welcome To Kitchen Wizard - Account Activation"
     body = """
         Welcome %s,
-        
+
         Let us be the first to welcome you to the easiest way to track what is happening in your kitchen. Before we get started we need you to complete the activation process by clicking the link below.
-        
+
         CLICK HERE: http://52.36.126.156?type=activate&code=%s
-        
+
         Thank You,
         Kitchen Wizard Support Team
         """ % (fname, code)
@@ -118,17 +121,19 @@ def send_confirmation_email(fname, email, code):
 def create_confirmation_email(fname, email, username):
     # Generates confirmation email, once account was created
     # Return bool
-    code = generate_confirmation_code(username)
-    if code == "ERROR_ADDING_CODE_DB":
-        log("Unable to add code to DB, Failing", 1)
-        return False
-    if send_confirmation_email(fname, email, code):
-        log("Email sent!", 2)
-        return True
-    else:
-        log("Email failed to be sent", 2)
-        return False
-
+    try:
+        code = generate_confirmation_code(username)
+        if code == "ERROR_ADDING_CODE_DB":
+            log("Unable to add code to DB, Failing", 1)
+            return False
+        if send_confirmation_email(fname, email, code):
+            log("Email sent!", 2)
+            return True
+        else:
+            log("Email failed to be sent", 2)
+            return False
+    except:
+        log("Error during code generation", 2)
 
 def create_account(username, fname, lname, email, hash):
     # Create account and add to DB
@@ -140,7 +145,7 @@ def create_account(username, fname, lname, email, hash):
     f_sql = "INSERT INTO User_Information (UserID, FirstName, LastName, Email, CreationDate) VALUES ('%s', '%s', '%s', '%s', '%s');" % (username, fname, lname, email, d)
     p_sql = "INSERT INTO Password (PasswordHash, User_id, UpdatedOn) VALUES ('%s', '%s', '%s');" % (hash, username, d)
     s_sql = "INSERT INTO Session_Key (SessionKey, UserID, AgeOffDate) VALUES ('%s', '%s', '%s');" % ('000000000', username, date)
-    
+
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     log("Connected to DB", 3)
     cursor = db.cursor()
@@ -162,8 +167,8 @@ def create_account(username, fname, lname, email, hash):
             log("Error during creating confirmation email", 3)
             return True
     except:
-        db.rollback()
-        db.close()
+        #db.rollback()
+        #db.close()
         log("Database Error in create account", 1)
         return False
 
@@ -200,4 +205,5 @@ def add_new_user(username, fname, lname, email, hash):
 
 # Testing Underway
 #send_confirmation_email("Amanda", "awinkfie@students.kennesaw.edu", "ABCDEFGHI123456789AABBCCDDEEFGHIJKLMNOPQRSTUV11445566778800")
-add_new_user("awinkfie", "Amanda", "Winkfield", "awinkfie@students.kennesaw.edu", "AABBCCDDEEFFGG")
+add_new_user("awinkfie", "Amanda", "Winkfield", "mrandal4@students.kennesaw.edu", "AABBCCDDEEFFGG")
+#generate_confirmation_code("awinkfie")
