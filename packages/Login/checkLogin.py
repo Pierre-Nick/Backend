@@ -1,9 +1,9 @@
 ###################################################################
 #####   `   Supports Login procedure for KitchenWizard        #####
 ###################################################################
-##### Version: 0.1                                            #####
-##### Author:  Marcus Randall                                 #####
-##### Tested:  N/A                                            #####
+##### Version: 0.3                                            #####
+##### Author:  Marcus R                                       #####
+##### Tested:  02/12/2016                                     #####
 #####                                                         #####
 ##### Purpose: The primary purpose of this mod is to perform  #####
 #####          the login process for active users to the      #####
@@ -13,6 +13,7 @@
 import MySQLdb
 import random
 from datetime import datetime, timedelta
+from createAccount import encrypt_password
 
 debug_on = True
 log_level = 3
@@ -81,13 +82,13 @@ def get_hash_for_user(userid):
     return data
 
 
-
 def check_password_hash(userid, hash):
     # Completes password check for user
     # Return bool
     log(("Checking password for login request by %s" % userid), 1)
     dbhash = get_hash_for_user(userid)
     dbhash = str(dbhash[0])
+    hash = encrypt_password(hash)
     if dbhash == hash:
         log("Password correct", 2)
         return True

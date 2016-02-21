@@ -1,9 +1,9 @@
 ###################################################################
 #####   `       Create User Account for KitchenWizard         #####
 ###################################################################
-##### Version: 0.1                                            #####
-##### Author:  Marcus Randall                                 #####
-##### Tested:  N/A                                            #####
+##### Version: 0.2                                            #####
+##### Author:  Marcus R                                       #####
+##### Tested:  02/18/2016                                     #####
 #####                                                         #####
 ##### Purpose: The primary purpose of this mod is to allow    #####
 #####          users to create a new account and to make sure #####
@@ -15,6 +15,7 @@ import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 import string
+import hashlib
 
 debug_on = True
 log_level = 3
@@ -82,9 +83,6 @@ def generate_confirmation_code(username):
 def send_confirmation_email(fname, email, code):
     # Sends confirmation email
     # Return bool
-    # Need more research to send email
-    # homekitchenwizzard@gmail.com
-    # KitchenWizzard
     log("Create email request", 2)
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -135,6 +133,16 @@ def create_confirmation_email(fname, email, username):
     except:
         log("Error during code generation", 2)
 
+
+def encrypt_password(password):
+    # Make password more secure
+    # Return str
+    log("hashing hash", 3)
+    h = hashlib.new(password)
+    h.update("EVERYONE_LOVES_KITCHENWIZARD!")
+    return h.hexdigest()
+
+
 def create_account(username, fname, lname, email, hash):
     # Create account and add to DB
     # Return bool
@@ -142,6 +150,7 @@ def create_account(username, fname, lname, email, hash):
     d = str(datetime.now())
     date = datetime.today()
     date = date + timedelta(6 * 30)
+    hash = encrypt_password(hash)
     f_sql = "INSERT INTO User_Information (UserID, FirstName, LastName, Email, CreationDate) VALUES ('%s', '%s', '%s', '%s', '%s');" % (username, fname, lname, email, d)
     p_sql = "INSERT INTO Password (PasswordHash, User_id, UpdatedOn) VALUES ('%s', '%s', '%s');" % (hash, username, d)
     s_sql = "INSERT INTO Session_Key (SessionKey, UserID, AgeOffDate) VALUES ('%s', '%s', '%s');" % ('000000000', username, date)
@@ -202,8 +211,3 @@ def add_new_user(username, fname, lname, email, hash):
     else:
         log("Bad username", 2)
         return "INVAILD_USERNAME"
-
-# Testing Underway
-#send_confirmation_email("Amanda", "awinkfie@students.kennesaw.edu", "ABCDEFGHI123456789AABBCCDDEEFGHIJKLMNOPQRSTUV11445566778800")
-add_new_user("awinkfie", "Amanda", "Winkfield", "mrandal4@students.kennesaw.edu", "AABBCCDDEEFFGG")
-#generate_confirmation_code("awinkfie")
