@@ -13,7 +13,7 @@
 import MySQLdb
 import random
 from datetime import datetime, timedelta
-from createAccount import encrypt_password
+from createAccount import *
 
 debug_on = True
 log_level = 3
@@ -171,6 +171,6 @@ def login_to_account(username, password):
             log("Invaild login", 2)
             return "INVAILD_LOGIN"
 
-else:
-    log("Bad login request", 2)
+    else:
+        log("Bad login request", 2)
         return "INVAILD_LOGIN"
