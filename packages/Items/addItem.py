@@ -3,7 +3,7 @@
 ###################################################################
 ##### Version: 0.3                                            #####
 ##### Author:  Marcus R                                       #####
-##### Tested:  02/12/2016                                     #####
+##### Tested:  02/--/2016                                     #####
 #####                                                         #####
 ##### Purpose: The primary purpose of this mod is to add a    #####
 #####          new item for a user to the inventory           #####
@@ -19,23 +19,87 @@ def log(message, lev):
             ti = str(datetime.now())
             print("[%s]addItem --> %s" % (ti, message))
 
+
+def __check_vaild_date(key):
+    # Checks if key vaild date has passed
+    # return bool
+    return True
+
+def __session_key_exist(key):
+    # Checks Session Key exist
+    # Return bool
+    if __check_vaild_date(key):
+        sql = "SELECT UserID FROM Session_Key WHERE SessionKey = '%s';" % (key)
+        db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+        log("Connected to DB", 3)
+        cursor = db.cursor()
+        cursor.execute(sql)
+        log("SQL excuted correctly", 3)
+        data = cursor.fetchone()
+        db.close()
+        log("DB closed", 3)
+        if data:
+            return True
+        else:
+            return False
+    else:
+        log("Hey has expired", 2)
+        return False
+
+
 def __vaildate_sessionkey(key):
     # Check if session key is vaild
     # Return bool
+    if __session_key_exist(key):
+        if __check_vaild_date(key):
+            log("Key is vaild", 2)
+            return True
+        else:
+            log("Invaild key", 2)
+            return False
+    else:
+        log("Invaild key", 2)
+        return False
 
 
 def __get_userid_from_key(key):
     # Gets userid from session key
     # Return str
+    log("Get userid from key", 2)
+    if(__vaildate_sessionkey(key)):
+        sql = "SELECT UserID FROM Session_Key WHERE SessionKey = '%s';" % (key)
+        db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+        log("Connected to DB", 3)
+        cursor = db.cursor()
+        cursor.execute(sql)
+        log("SQL excuted correctly", 3)
+        data = cursor.fetchone()
+        db.close()
+        log("DB closed", 3)
+        return str(data[0])
+    else:
+        return "BAD_KEY"
 
 
-def __get_product_details(barcode):
+def __product_is_in_DB(barcode):
+    # Check if the product is in the DB
+    # Return bool
+
+
+def __get_product_details_from_api(barcode):
     # Get details of product
     # Return list
 
-def __add_item_to_inventory(item):
+
+def __add_product_to_DB(item):
+    # Add product details from API to Database
+    # Return bool
+
+    
+def __add_item_to_inventory(item, userid):
     # Add item to inventory
     # Return bool
+
 
 def add_new_item(barcode, session):
     # Add new item to inventory of user
