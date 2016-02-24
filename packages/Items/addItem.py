@@ -84,21 +84,44 @@ def __get_userid_from_key(key):
 def __product_is_in_DB(barcode):
     # Check if the product is in the DB
     # Return bool
+    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';" % (key)
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    cursor.execute(sql)
+    log("SQL excuted correctly", 3)
+    data = cursor.fetchone()
+    db.close()
+    log("DB closed", 3)
+
+    if data:
+        return True
+    else:
+        return False
 
 
 def __get_product_details_from_api(barcode):
     # Get details of product
     # Return list
+    item = {}
+
 
 
 def __add_product_to_DB(item):
     # Add product details from API to Database
     # Return bool
+    #{0: Name, 1:details, 2:Maker, 3:size, 4:group}
 
-    
-def __add_item_to_inventory(item, userid):
+
+def __add_item_to_inventory(barcode, userid):
     # Add item to inventory
     # Return bool
+    if not __product_is_in_DB(barcode):
+        item = __get_product_details_from_api(barcode)
+        if not __add_product_to_DB(item):
+            return False
+
+    # Add item to inventory
 
 
 def add_new_item(barcode, session):
