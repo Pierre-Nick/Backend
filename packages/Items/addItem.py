@@ -20,10 +20,27 @@ def log(message, lev):
             print("[%s]addItem --> %s" % (ti, message))
 
 
+def __get_session_key_expire_data(key):
+    # Get expiration date for key
+    # Return str
+    sql = "SELECT AgeOffDate FROM Session_Key WHERE SessionKey = '%s'" % (str(key))
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    cursor.execute(sql)
+    log("SQL excuted correctly", 3)
+    data = cursor.fetchone()
+    db.close()
+    log("DB closed", 3)
+    return str(data[0])
+
 def __check_vaild_date(key):
     # Checks if key vaild date has passed
     # return bool
-    return True
+    d = str(__get_session_key_expire_data(key))
+    d1 = datetime.datetime.strptime(d, "%d/%m/%Y").date()
+    d2 = datetime.now()
+    return d1 > d2
 
 def __session_key_exist(key):
     # Checks Session Key exist
@@ -110,7 +127,23 @@ def __get_product_details_from_api(barcode):
 def __add_product_to_DB(item):
     # Add product details from API to Database
     # Return bool
-    #{0: Name, 1:details, 2:Maker, 3:size, 4:group}
+    #{0: Barcode, 1: Name, 2:details, 3:Maker, 4:size, 5:group}
+    sql = "INSERT INTO ProductInformation (ProductID, ProductName, ProductDiscription, Manufacturer, Quantity, GroupID) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4]), str(item[5]))
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    try:
+        cursor.execute(sql)
+        log("SQL excuted correctly", 2)
+        db.commit()
+        db.close()
+        log("DB closed", 3)
+        return True
+    except:
+        db.rollback()
+        db.close()
+        log("Error adding to DB", 1)
+        return False
 
 
 def __add_item_to_inventory(barcode, userid):
@@ -122,25 +155,55 @@ def __add_item_to_inventory(barcode, userid):
             return False
 
     # Add item to inventory
+    sql = "INSERT INTO `KitchenWizard`.`Inventory` (`UserID`, `ProductID`, `DateAdded`) VALUES ('%s', '%s', '%s');" % (str(userid), str(barcode), str(datetime.now()))
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    try:
+        cursor.execute(sql)
+        log("SQL excuted correctly", 2)
+        db.commit()
+        db.close()
+        log("DB closed", 3)
+        return True
+    except:
+        db.rollback()
+        db.close()
+        log("Error adding to DB", 1)
+        return False
 
+
+def __get_inventory_id(barcode, userid):
+    # Get id for latest item added with particular barcode by user
+    # Return str
+    sql = "SELECT InventoryID FROM Inventory WHERE ProductID = 's' AND UserID = '%s';" % (str(barcode), str(userid))
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    cursor.execute(sql)
+    log("SQL excuted correctly", 3)
+    data = cursor.fetchall()
+    db.close()
+    log("DB closed", 3)
+    return str(data[(len(data) - 1)])
 
 def add_new_item(barcode, session):
     # Add new item to inventory of user
-    # Return bool
+    # Return str
     log("Adding new item", 1)
     userid=__get_userid_from_key(session)
     if userid == 'BAD_KEY':
         log("Add item failed", 1)
-        return False
+        return "ADD_FAILED"
     else:
         item =  __get_product_details(barcode)
         if item:
             if __add_item_to_inventory(item):
                 log("New item added", 1)
-                return True
+                return __get_inventory_id(barcode, userid)
             else:
                 log("Add item failed", 1)
-                return False
+                return "ADD_FAILED"
         else:
             ("Add item failed", 1)
-            return False
+            return "ADD_FAILED"
