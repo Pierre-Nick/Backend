@@ -10,6 +10,8 @@
 ###################################################################
 
 from datetime import datetime
+from urllib2 import urlopen
+import json
 
 def log(message, lev):
     # Log messages
@@ -120,9 +122,18 @@ def __product_is_in_DB(barcode):
 def __get_product_details_from_api(barcode):
     # Get details of product
     # Return list
+    url = "http://api.foodessentials.com/labelarray?u=%s&sid=9fe4492b-492e-4336-86b8-7d278e02aa51&n=2&s=0&f=json&api_key=mvdrrzwt9327ttazxse6f95b" % (str(barcode))
+    response = urlopen(url)
+    j_obj = json.load(response)
     item = {}
-
-
+    for i in j_obj['productsArray']:
+        item.add(str(barcode))
+        item.add(str(i['product_name']))
+        item.add(str(i['product_description']))
+        item.add(str(i['manufacturer']))
+        item.add(str(i['product_size']))
+        item.add(str(__get_group_id(str(i['food_category']))))
+    return item
 
 def __add_product_to_DB(item):
     # Add product details from API to Database
@@ -207,3 +218,7 @@ def add_new_item(barcode, session):
         else:
             ("Add item failed", 1)
             return "ADD_FAILED"
+
+
+# Testing code
+#__get_product_details_from_api("024100440771")
