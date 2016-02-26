@@ -119,6 +119,65 @@ def __product_is_in_DB(barcode):
         return False
 
 
+def __group_in_db(name):
+    # Checks if group is contained in DB
+    # Return bool
+    sql = "SELECT * FROM Grouping WHERE GroupName = '%s'" % (name)
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    cursor.execute(sql)
+    log("SQL excuted correctly", 3)
+    data = cursor.fetchone()
+    db.close()
+    log("DB closed", 3)
+
+    if data:
+        return True
+    else:
+        return False
+
+
+def __add_group_to_db(name):
+    # Adds group to DB
+    # Return bool
+    sql = "INSERT INTO `KitchenWizard`.`Grouping` (`GroupName`, `DateAdded`) VALUES ('%s', '%s');" % (str(name), str(datetime.now()))
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    try:
+        cursor.execute(sql)
+        log("SQL excuted correctly", 2)
+        db.commit()
+        db.close()
+        log("DB closed", 3)
+        return True
+    except:
+        db.rollback()
+        db.close()
+        log("Error adding to DB", 1)
+        return False
+
+
+def __get_group_id(name):
+    # Get group ID
+    # Return str
+    if not __group_in_db(name):
+        __add_group_to_db(name)
+
+    # Get ID
+    sql = "SELECT GroupID FROM Grouping WHERE GroupName = '%s'" % (name)
+    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+    log("Connected to DB", 3)
+    cursor = db.cursor()
+    cursor.execute(sql)
+    log("SQL excuted correctly", 3)
+    data = cursor.fetchone()
+    db.close()
+    log("DB closed", 3)
+    return str(data[0])
+
+
 def __get_product_details_from_api(barcode):
     # Get details of product
     # Return list
@@ -132,7 +191,7 @@ def __get_product_details_from_api(barcode):
         item.add(str(i['product_description']))
         item.add(str(i['manufacturer']))
         item.add(str(i['product_size']))
-        item.add(str(__get_group_id(str(i['food_category']))))
+        item.add(str(__get_group_id(str(i['shelf']))))
     return item
 
 def __add_product_to_DB(item):
