@@ -3,7 +3,7 @@
 ###################################################################
 ##### Version: 0.3                                            #####
 ##### Author:  Marcus R                                       #####
-##### Tested:  02/--/2016                                     #####
+##### Tested:  02/26/2016                                     #####
 #####                                                         #####
 ##### Purpose: The primary purpose of this mod is to remove   #####
 #####          a item for a user to the inventory             #####
@@ -22,7 +22,7 @@ def log(message, lev):
     if debug_on:
         if lev <= log_level:
             ti = str(datetime.now())
-            print("[%s]addItem --> %s" % (ti, message))
+            print("[%s]removeItem --> %s" % (ti, message))
 
 
 def __item_in_inventory(item_id, userid):
