@@ -3,7 +3,7 @@
 ###################################################################
 ##### Version: 0.3                                            #####
 ##### Author:  Marcus R                                       #####
-##### Tested:  02/--/2016                                     #####
+##### Tested:  02/26/2016                                     #####
 #####                                                         #####
 ##### Purpose: The primary purpose of this mod is to add a    #####
 #####          new item for a user to the inventory           #####
