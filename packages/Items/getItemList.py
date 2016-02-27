@@ -3,7 +3,7 @@
 ###################################################################
 ##### Version: 0.3                                            #####
 ##### Author:  Marcus R                                       #####
-##### Tested:  02/--/2016                                     #####
+##### Tested:  02/27/2016                                     #####
 #####                                                         #####
 ##### Purpose: The primary purpose of this mod is to get a    #####
 #####          list of item for a user                        #####
@@ -25,11 +25,11 @@ def log(message, lev):
             print("[%s]getItemList --> %s" % (ti, message))
 
 
-def __get_product_information(ProductID):
+def __get_product_information(Product):
     # Get the product information
     # return list
     log("Get product information", 2)
-    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';" % (ProductID)
+    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';" % (str(Product))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     log("Connected to DB", 3)
     cursor = db.cursor()
@@ -76,19 +76,18 @@ def __get_items_for_user(userid):
 def __create_response_list(items):
     # Create and return the list of products
     # Return list
-    temp_list = []
-    final_list = []
+    temp = []
+    final = []
     log("Create list of products, for UI", 2)
 
     for i in items:
-        temp_list.append(__get_product_information(str(i))
+        temp.append(__get_product_information(str(i[0])))
 
-    for i in temp_list:
-        k={i[0], i[1], i[2], i[3], i[4], __get_group_image(str(i[5])}
-        print k
-        final_list.append(k)
+    for j in temp:
+        k=[j[0], j[1], j[2], j[3], j[4], __get_group_image(str(j[5]))]
+        final.append(k)
 
-    print final_list
+    return final
 
 
 def get_item_list(session_key):
