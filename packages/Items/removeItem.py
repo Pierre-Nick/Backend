@@ -12,30 +12,20 @@
 from datetime import *
 import MySQLdb
 from addItem import __get_userid_from_key
-
-debug_on = True
-log_level = 3
-
-def log(message, lev):
-    # Log messages
-    # Return void
-    if debug_on:
-        if lev <= log_level:
-            ti = str(datetime.now())
-            print("[%s]removeItem --> %s" % (ti, message))
+from packages.Log import kwlog
 
 
 def __item_in_inventory(item_id, userid):
-    log("Checking if item is in inventory", 2)
+    kwlog.log("Checking if item is in inventory")
     sql = "SELECT * FROM Inventory WHERE UserID = '%s' AND InventoryID = '%s';" % (str(userid), str(item_id))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
 
     if data:
         return True
@@ -43,23 +33,23 @@ def __item_in_inventory(item_id, userid):
         return False
 
 def __remove_item_from_db(item_id):
-    log("Request to remove item from db", 2)
+    kwlog.log("Request to remove item from db")
     sql = "DELETE FROM Inventory WHERE InventoryID = '%s';" % (item_id)
     print sql
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     try:
         cursor.execute(sql)
-        log("SQL excuted correctly", 2)
+        kwlog.log("SQL excuted correctly")
         db.commit()
         db.close()
-        log("DB closed", 3)
+        kwlog.log("DB closed")
         return True
     except:
         db.rollback()
         db.close()
-        log("Error adding to DB", 1)
+        kwlog.log("Error adding to DB")
         return False
 
 
@@ -67,12 +57,12 @@ def remove_item(item_id, session_key):
     userid = __get_userid_from_key(session_key)
     item_id = int(item_id)
     if not __item_in_inventory(item_id, userid):
-        log("Item not in inventory", 1)
+        kwlog.log("Item not in inventory")
         return False
     else:
         if __remove_item_from_db(item_id):
-            log("Item removed from DB", 1)
+            kwlog.log("Item removed from DB")
             return True
         else:
-            log("Item failed to be removed", 1)
+            kwlog.log("Item failed to be removed")
             return False

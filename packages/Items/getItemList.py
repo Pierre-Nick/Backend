@@ -12,64 +12,54 @@
 from datetime import *
 import MySQLdb
 from addItem import __get_userid_from_key
-
-debug_on = True
-log_level = 3
-
-def log(message, lev):
-    # Log messages
-    # Return void
-    if debug_on:
-        if lev <= log_level:
-            ti = str(datetime.now())
-            print("[%s]getItemList --> %s" % (ti, message))
+from packages.Log import kwlog
 
 
 def __get_product_information(Product):
     # Get the product information
     # return list
-    log("Get product information", 2)
+    kwlog.log("Get product information")
     sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';" % (str(Product))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     return data
 
 
 def __get_group_image(group_id):
     # Get the image of a product for a group
     # return str
-    log("Get url for group image", 2)
+    kwlog.log("Get url for group image")
     sql = "SELECT GroupImage FROM Grouping WHERE GroupID = '%s';" % (group_id)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     return str(data[0])
 
 
 def __get_items_for_user(userid):
     # Get items for a userid
     # Return list
-    log("Get items for user from DB", 2)
+    kwlog.log("Get items for user from DB")
     sql = "SELECT ProductID FROM Inventory WHERE UserID = '%s';" % (userid)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchall()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     return data
 
 
@@ -78,7 +68,7 @@ def __create_response_list(items):
     # Return list
     temp = []
     final = []
-    log("Create list of products, for UI", 2)
+    kwlog.log("Create list of products, for UI")
 
     for i in items:
         temp.append(__get_product_information(str(i[0])))
@@ -93,7 +83,7 @@ def __create_response_list(items):
 def get_item_list(session_key):
     # Get items for a userid
     # Return list
-    log("Get items for a user", 1)
+    kwlog.log("Get items for a user")
     userid = __get_userid_from_key(session_key)
     user_list = __get_items_for_user(userid)
     return __create_response_list(user_list)

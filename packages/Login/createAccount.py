@@ -14,31 +14,21 @@ from checkLogin import *
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+from packages.Log import kwlog
 import string
 import hashlib
-
-debug_on = True
-log_level = 3
-
-def log(message, lev):
-    # Log messages
-    # Return N/A
-    if debug_on:
-        if lev <= log_level:
-            ti = str(datetime.now())
-            print("[%s]createAccount --> %s" % (ti, message))
 
 
 def check_if_email_exist(email):
     sql = "SELECT * FROM User_Information WHERE Email = '%s';" % (email)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     if not data:
         return False
     else:
@@ -50,19 +40,19 @@ def add_confirmation_to_db(code, username):
     # Return bool
     sql = "INSERT INTO `KitchenWizard`.`Activation_Key` (`Key`, `UserID`) VALUES ('%s', '%s');" % (str(code), str(username))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     try:
         cursor.execute(sql)
-        log("SQL excuted correctly", 2)
+        kwlog.log("SQL excuted correctly")
         db.commit()
         db.close()
-        log("DB closed", 3)
+        kwlog.log("DB closed")
         return True
     except:
         db.rollback()
         db.close()
-        log("Error adding confirmation to DB", 1)
+        kwlog.log("Error adding confirmation to DB")
         return False
 
 
@@ -71,24 +61,24 @@ def generate_confirmation_code(username):
     # Return str
     chars=string.ascii_uppercase + string.digits
     code = ''.join(random.choice(chars) for _ in range(25))
-    log("Code created", 2)
+    kwlog.log("Code created")
     if add_confirmation_to_db(code, username):
-        log("Code added to DB", 2)
+        kwlog.log("Code added to DB")
         return code
     else:
-        log("Error adding code", 2)
+        kwlog.log("Error adding code")
         return "ERROR_ADDING_CODE_DB"
 
 
 def send_confirmation_email(fname, email, code):
     # Sends confirmation email
     # Return bool
-    log("Create email request", 2)
+    kwlog.log("Create email request")
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
     server.starttls()
     server.login("homekitchenwizzard@gmail.com", "KitchenWizard")
-    log("Login to email - complete", 3)
+    kwlog.log("Login to email - complete")
     msg = MIMEMultipart()
     msg['From'] = "homekitchenwizzard@gmail.com"
     msg['To'] = email
@@ -104,15 +94,15 @@ def send_confirmation_email(fname, email, code):
         Kitchen Wizard Support Team
         """ % (fname, code)
     msg.attach(MIMEText(body, 'plain'))
-    log("Sending message...", 3)
+    kwlog.log("Sending message...")
     try:
         server.sendmail("homekitchenwizzard@gmail.com", email, msg.as_string())
         server.close()
-        log("Message sent", 1)
+        kwlog.log("Message sent")
         return True
     except:
         server.close()
-        log("Message Failed", 2)
+        kwlog.log("Message Failed")
         return False
 
 
@@ -122,22 +112,22 @@ def create_confirmation_email(fname, email, username):
     try:
         code = generate_confirmation_code(username)
         if code == "ERROR_ADDING_CODE_DB":
-            log("Unable to add code to DB, Failing", 1)
+            kwlog.log("Unable to add code to DB, Failing")
             return False
         if send_confirmation_email(fname, email, code):
-            log("Email sent!", 2)
+            kwlog.log("Email sent!")
             return True
         else:
-            log("Email failed to be sent", 2)
+            kwlog.log("Email failed to be sent")
             return False
     except:
-        log("Error during code generation", 2)
+        kwlog.log("Error during code generation")
 
 
 def encrypt_password(password):
     # Make password more secure
     # Return str
-    log("hashing hash", 3)
+    kwlog.log("hashing hash")
     h = hashlib.new(password)
     h.update("EVERYONE_LOVES_KITCHENWIZARD!")
     return h.hexdigest()
@@ -146,7 +136,7 @@ def encrypt_password(password):
 def create_account(username, fname, lname, email, hash):
     # Create account and add to DB
     # Return bool
-    log("Creating Account", 1)
+    kwlog.log("Creating Account")
     d = str(datetime.now())
     date = datetime.today()
     date = date + timedelta(6 * 30)
@@ -156,58 +146,58 @@ def create_account(username, fname, lname, email, hash):
     s_sql = "INSERT INTO Session_Key (SessionKey, UserID, AgeOffDate) VALUES ('%s', '%s', '%s');" % ('000000000', username, date)
 
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     try:
         cursor.execute(f_sql)
-        log("User_Information SQL completed", 3)
+        kwlog.log("User_Information SQL completed")
         cursor.execute(p_sql)
-        log("Password SQL completed", 3)
+        kwlog.log("Password SQL completed")
         cursor.execute(s_sql)
-        log("Session SQL completed", 3)
-        log("SQL excuted correctly", 2)
+        kwlog.log("Session SQL completed")
+        kwlog.log("SQL excuted correctly")
         db.commit()
         db.close()
-        log("DB closed", 3)
+        kwlog.log("DB closed")
         if create_confirmation_email(fname, email, username):
-            log("Account Created, all good", 3)
+            kwlog.log("Account Created, all good")
             return True
         else:
-            log("Error during creating confirmation email", 3)
+            kwlog.log("Error during creating confirmation email")
             return True
     except:
         #db.rollback()
         #db.close()
-        log("Database Error in create account", 1)
+        kwlog.log("Database Error in create account")
         return False
 
 
 def add_new_user(username, fname, lname, email, hash):
     # Create new account, but must check vaild email and username
     # Return str
-    log("Request to create a new account", 1)
+    kwlog.log("Request to create a new account")
     if(user_exist(username) == "NO_ID_FOUND"):
-        log("UserID passed test", 2)
+        kwlog.log("UserID passed test")
         if check_if_email_exist(email):
-            log("Email check failed", 2)
-            log("Email already connected to another account", 3)
+            kwlog.log("Email check failed")
+            kwlog.log("Email already connected to another account")
             return "ACCOUNT_ALREADY_EXIST_FOR_EMAIL"
         else:
-            log("Checks passed, creating account", 2)
+            kwlog.log("Checks passed, creating account")
             if create_account(username, fname, lname, email, hash):
-                log("Account created, sending email confirmation", 1)
+                kwlog.log("Account created, sending email confirmation")
             else:
-                log("Error during account creation", 1)
+                kwlog.log("Error during account creation")
             return "ACCOUNT_CREATED"
     elif(user_exist(username) == "ID_FOUND"):
         if check_if_email_exist(email):
-            log("Email check failed", 2)
-            log("Email already connected to another account", 3)
+            kwlog.log("Email check failed")
+            kwlog.log("Email already connected to another account")
             return "ACCOUNT_ALREADY_EXIST_FOR_EMAIL"
         else:
-            log("Username check failed", 2)
-            log("Username already taken by another user", 3)
+            kwlog.log("Username check failed")
+            kwlog.log("Username already taken by another user")
             return "USERNAME_TAKEN"
     else:
-        log("Bad username", 2)
+        kwlog.log("Bad username")
         return "INVAILD_USERNAME"

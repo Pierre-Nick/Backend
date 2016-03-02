@@ -12,16 +12,7 @@
 
 from checkLogin import *
 from datetime import datetime
-
-debug_on = True
-log_level = 3
-def log(message, lev):
-    # Log messages
-    # Return void
-    if debug_on:
-        if lev <= log_level:
-            ti = str(datetime.now())
-            print("[%s]updateAccount --> %s" % (ti, message))
+from packages.Log import kwlog
 
 
 def __get_act_code(userid):
@@ -29,13 +20,13 @@ def __get_act_code(userid):
     # Return str
     sql = "SELECT Code FROM Activation_Key WHERE UserID = '%s';" % (userid)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     return str(data[0])
 
 
@@ -44,10 +35,10 @@ def __check_code(userid, code):
     # Return bool
     d_code = __get_act_code(userid)
     if d_code == code:
-        log("Activation code matches", 2)
+        kwlog.log("Activation code matches")
         return True
     else:
-        log("Activation code does not match", 2)
+        kwlog.log("Activation code does not match")
         return False
 
 
@@ -56,13 +47,13 @@ def __check_act_status(userid):
     # Return bool
     sql = "SELECT IsActivated FROM User_Information WHERE UserID = '%s';" % (userid)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     if str(data[0]) == '1':
         return True
     else:
@@ -72,22 +63,22 @@ def __check_act_status(userid):
 def __update_act_status(userid):
     # Updates activation status to activated
     # Return bool
-    log("Update activation status", 2)
+    kwlog.log("Update activation status")
     sql = "UPDATE User_Information SET IsActivated = '1' WHERE UserID = '%s';" % (userid)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     try:
         cursor.execute(sql)
-        log("SQL excuted correctly", 2)
+        kwlog.log("SQL excuted correctly")
         db.commit()
         db.close()
-        log("DB closed", 3)
+        kwlog.log("DB closed")
         return True
     except:
         db.rollback()
         db.close()
-        log("Error updating activation status to DB", 1)
+        kwlog.log("Error updating activation status to DB")
         return False
 
 
@@ -95,24 +86,24 @@ def update_account_activation_stats(userid, code):
     # Update activation status if code is correct
     # Return bool
     # Primary
-    log("Update activation code, request", 2)
+    kwlog.log("Update activation code, request")
     if user_exist(userid) == "ID_FOUND":
-        log("Username exist", 2)
+        kwlog.log("Username exist")
         if not __check_act_status(userid):
-            log("Account not activated", 3)
+            kwlog.log("Account not activated")
             if __check_code(userid, code):
                 if __update_act_status(userid):
-                    log("Account activated", 1)
+                    kwlog.log("Account activated")
                     return True
                 else:
-                    log("DB error occured", 2)
+                    kwlog.log("DB error occured")
                     return False
             else:
-                log("Bad activation code",2)
+                kwlog.log("Bad activation code")
                 return False
         else:
-            log("Account already activated", 2)
+            kwlog.log("Account already activated")
             return False
     else:
-        log("Userid not found")
+        kwlog.log("Userid not found")
         return False

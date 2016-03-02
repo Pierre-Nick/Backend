@@ -14,17 +14,7 @@ import MySQLdb
 import random
 from datetime import datetime, timedelta
 from createAccount import *
-
-debug_on = True
-log_level = 3
-
-def log(message, lev):
-    # Log messages
-    # Return void
-    if debug_on:
-        if lev <= log_level:
-            ti = str(datetime.now())
-            print("[%s]checkLogin --> %s" % (ti, message))
+from packages.Log import kwlog
 
 
 def safetyCheck(usr):
@@ -45,55 +35,55 @@ def safetyCheck(usr):
 def user_exist(usr):
     # Check if userid exist
     # Return str
-    log("Checking if user is in DB", 1)
+    kwlog.log("Checking if user is in DB")
     if(safetyCheck(usr)):
-        log("safety check, passed", 2)
+        kwlog.log("safety check, passed")
         db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-        log("Connected to DB", 3)
+        kwlog.log("Connected to DB")
         cursor = db.cursor()
         sql = "SELECT UserID FROM User_Information WHERE UserID = '%s'" % usr
         cursor.execute(sql)
-        log("SQL excuted correctly", 3)
+        kwlog.log("SQL excuted correctly")
         data = cursor.fetchone()
         db.close()
-        log("DB closed", 3)
+        kwlog.log("DB closed")
         if data:
             return "ID_FOUND"
         else:
             return "NO_ID_FOUND"
     else:
-        log("safety check, failed", 2)
+        kwlog.log("safety check, failed")
         return "BAD_ID"
 
 
 def get_hash_for_user(userid):
     # Get hash for user, return hash
     # Return str
-    log("DB request for DB-Password", 1)
+    kwlog.log("DB request for DB-Password")
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     sql = "SELECT PasswordHash FROM Password WHERE User_id = '%s'" % userid
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     return data
 
 
 def check_password_hash(userid, hash):
     # Completes password check for user
     # Return bool
-    log(("Checking password for login request by %s" % userid), 1)
+    kwlog.log(("Checking password for login request by %s" % userid))
     dbhash = get_hash_for_user(userid)
     dbhash = str(dbhash[0])
     hash = encrypt_password(hash)
     if dbhash == hash:
-        log("Password correct", 2)
+        kwlog.log("Password correct")
         return True
     else:
-        log("Password incorrect", 2)
+        kwlog.log("Password incorrect")
         return False
 
 
@@ -105,72 +95,72 @@ def check_password_hash(userid, hash):
 def uppdate_session_key(username, ses):
     # Update Session key in DB
     # Return void
-    log("DB request update session key", 1)
+    kwlog.log("DB request update session key")
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     date = datetime.today()
     date = date + timedelta(6 * 30)
     sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`='%d', `AgeOffDate`='%s' WHERE `USERID`='%s';" % (ses, date, username)
     try:
         cursor.execute(sql)
-        log("SQL excuted correctly", 3)
+        kwlog.log("SQL excuted correctly")
         db.commit()
     except:
         db.rollback()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
 
 
 def check_active_status(username):
     # Checks if account has been activated
     # Return bool
-    log("Check status of account", 1)
+    kwlog.log("Check status of account")
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    log("Connected to DB", 3)
+    kwlog.log("Connected to DB")
     cursor = db.cursor()
     sql = "SELECT IsActivated FROM User_Information WHERE User_id = '%s'" % userid
     cursor.execute(sql)
-    log("SQL excuted correctly", 3)
+    kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
     db.close()
-    log("DB closed", 3)
+    kwlog.log("DB closed")
     if data[0] == 0:
-        log("Account not activated", 2)
+        kwlog.log("Account not activated")
         return False
     else:
-        log("Account activated", 2)
+        kwlog.log("Account activated")
         return True
 
 
 def generate_session_key(username):
     # When login complete generate session key
     # Return str
-    log("Generating session key", 2)
+    kwlog.log("Generating session key")
     ses = random.randint(100000000, 100000000000)
-    log("Updating key in DB", 2)
+    kwlog.log("Updating key in DB")
     uppdate_session_key(username, ses)
     ses = str(ses)
-    log("Session key returned", 3)
+    kwlog.log("Session key returned")
     return ses
 
 
 def login_to_account(username, password):
     # Performs login of the account
     # Return str
-    log(("Login request by ", username), 1)
+    kwlog.log(("Login request by ", username))
     if(user_exist(username) == "ID_FOUND"):
         if(check_password_hash(username, password)):
             if(check_active_status(username)):
-                log("Vaild login, generating session key", 2)
+                kwlog.log("Vaild login, generating session key")
                 ses = generate_session_key(username)
                 return ses
             else:
                 return "ACCOUNT_NOT_ACTIVE"
         else:
-            log("Invaild login", 2)
+            kwlog.log("Invaild login")
             return "INVAILD_LOGIN"
 
     else:
-        log("Bad login request", 2)
+        kwlog.log("Bad login request")
         return "INVAILD_LOGIN"
