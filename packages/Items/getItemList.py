@@ -85,5 +85,9 @@ def get_item_list(session_key):
     # Return list
     kwlog.log("Get items for a user")
     userid = __get_userid_from_key(session_key)
-    user_list = __get_items_for_user(userid)
-    return __create_response_list(user_list)
+    if userid == 'BAD_KEY':
+        kwlog.log("Bad Session Key")
+        return "BAD_KEY"
+    else:
+        user_list = __get_items_for_user(userid)
+        return __create_response_list(user_list)
