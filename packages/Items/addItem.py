@@ -12,7 +12,7 @@
 from datetime import *
 from urllib2 import urlopen
 import json
-import MySQLdb
+import pymysql as MySQLdb
 from packages.Log import kwlog
 
 

@@ -13,6 +13,7 @@
 from checkLogin import *
 from datetime import datetime
 from packages.Log import kwlog
+import pymysql as MySQLdb
 
 
 def __get_act_code(userid):

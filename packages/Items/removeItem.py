@@ -10,7 +10,7 @@
 ###################################################################
 
 from datetime import *
-import MySQLdb
+import pymysql as MySQLdb
 from addItem import __get_userid_from_key
 from packages.Log import kwlog
 

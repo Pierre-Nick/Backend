@@ -9,13 +9,13 @@
 #####          item from the inventory for a user             #####
 ###################################################################
 
-import MySQLdb
+import pymysql as MySQLdb
 from packages.Log import kwlog
 from addItem import __get_userid_from_key
 
 
 def __check_item_owner(uid, user):
-    
+
 
 
 def __get_item_for_uid(uid):
