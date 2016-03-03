@@ -129,8 +129,9 @@ def encrypt_password(password):
     # Make password more secure
     # Return str
     kwlog.log("hashing hash")
-    h = hashlib.new(password)
-    h.update("EVERYONE_LOVES_KITCHENWIZARD!")
+    h = hashlib.md5()
+    h.update(password)
+    h.update(b"EVERYONE_LOVES_KITCHENWIZARD!")
     return h.hexdigest()
 
 

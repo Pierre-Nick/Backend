@@ -1,4 +1,6 @@
 import threading
+import re
+import urllib
 from packages.Log import kwlog
 from packages.Job.util import strip_headers
 from packages.Login.createAccount import add_new_user
@@ -9,8 +11,6 @@ job_queue_blocked = False
 def start_job(connection):
 	data = connection.recv(4096).decode("utf-8")
 	data = data.split('\r\n')
-	print(data)
-	data = strip_headers(data)
 	thread =threading.Thread(target=service_request, args=(data,connection))
 	add_job(thread)
 
@@ -53,6 +53,20 @@ def monitor_jobs():
 			
 def service_request(data, connection):
 	result = None
-	print(data)
-	connection.send("Hello".encode("utf-8"))
+	print(data[0])
+	if "command=register" in data[0]:
+		username = re.search("username=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
+		print(username)
+		fname = re.search("fname=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
+		print(fname)
+		lname = re.search("lname=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
+		print(lname)
+		email = re.search("email=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0].replace("%40","@")
+		print(email)
+		password = re.search("password=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
+		print(password)
+	
+	connection.send("HTTP/1.1 200 OK\n\nHello".encode("utf-8"))
+	add_new_user(username, fname, lname, email, password.encode("utf-8"))
+	connection.close()
 	return
