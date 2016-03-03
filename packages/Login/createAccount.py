@@ -39,7 +39,8 @@ def check_if_email_exist(email):
 def add_confirmation_to_db(code, username):
     # Adds confirmation code to DB
     # Return bool
-    sql = "INSERT INTO `KitchenWizard`.`Activation_Key` (`Key`, `UserID`) VALUES ('%s', '%s');" % (str(code), str(username))
+    print(code)
+    sql = "INSERT INTO Activation_Key (Code, UserID) VALUES ('%s', '%s');" % (str(code), str(username))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
     cursor = db.cursor()
@@ -145,7 +146,7 @@ def create_account(username, fname, lname, email, hash):
     hash = encrypt_password(hash)
     f_sql = "INSERT INTO User_Information (UserID, FirstName, LastName, Email, CreationDate) VALUES ('%s', '%s', '%s', '%s', '%s');" % (username, fname, lname, email, d)
     p_sql = "INSERT INTO Password (PasswordHash, User_id, UpdatedOn) VALUES ('%s', '%s', '%s');" % (hash, username, d)
-    s_sql = "INSERT INTO Session_Key (SessionKey, UserID, AgeOffDate) VALUES ('%s', '%s', '%s');" % ('000000000', username, date)
+    s_sql = "INSERT INTO Session_Key (UserID, SessionKey, AgeOffDate) VALUES ('%s', '%s', '%s');" % (username, '0000000', date)
 
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
@@ -166,7 +167,7 @@ def create_account(username, fname, lname, email, hash):
             return True
         else:
             kwlog.log("Error during creating confirmation email")
-            return True
+            return False
     except:
         #db.rollback()
         #db.close()

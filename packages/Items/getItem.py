@@ -14,6 +14,10 @@ from packages.Log import kwlog
 from addItem import __get_userid_from_key
 
 
+def __check_item_owner(uid, user):
+    
+
+
 def __get_item_for_uid(uid):
 
 
