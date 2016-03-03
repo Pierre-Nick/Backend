@@ -54,7 +54,6 @@ def monitor_jobs():
 def service_request(data, connection):
 	result = None
 	print(data)
+	connection.send("Hello".encode("utf-8"))
+	connection.close()
 	return
-	if "register" in data[0]:
-		connection.sendmsg(str(add_new_user(data[1], data[2], data[3], data[4])).encode("utf-8"))
-	return thread
