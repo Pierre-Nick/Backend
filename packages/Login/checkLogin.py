@@ -10,10 +10,10 @@
 #####          KitchenWizard system.                          #####
 ###################################################################
 
-import MySQLdb
+import pymysql as MySQLdb
 import random
 from datetime import datetime, timedelta
-from createAccount import *
+from packages.Login.createAccount import *
 from packages.Log import kwlog
 
 

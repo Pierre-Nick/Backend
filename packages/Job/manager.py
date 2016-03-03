@@ -1,6 +1,7 @@
 import threading
 from packages.Log import kwlog
 from packages.Job.util import strip_headers
+from packages.Login.createAccount import add_new_user
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -8,10 +9,10 @@ job_queue_blocked = False
 def start_job(connection):
 	data = connection.recv(4096).decode("utf-8")
 	data = data.split('\r\n')
+	print(data)
 	data = strip_headers(data)
-	thread = interpret_request(data)
+	thread =threading.Thread(target=service_request, args=(data,connection))
 	add_job(thread)
-	connection.close()
 
 def add_job(thread):
 	global job_queue
@@ -50,8 +51,10 @@ def monitor_jobs():
 			if not thread.is_alive():
 				remove_job(thread)
 			
-def interpret_request(data):
-	thread = None
-	
-	thread =threading.Thread(target=kwlog.log, args=("sample thread arg",))
+def service_request(data, connection):
+	result = None
+	print(data)
+	return
+	if "register" in data[0]:
+		connection.sendmsg(str(add_new_user(data[1], data[2], data[3], data[4])).encode("utf-8"))
 	return thread

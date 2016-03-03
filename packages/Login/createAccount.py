@@ -10,10 +10,11 @@
 #####          all information from the user is vaild         #####
 ###################################################################
 
-from checkLogin import *
+from packages.Login.checkLogin import *
 import smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+import pymysql as MySQLdb
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from packages.Log import kwlog
 import string
 import hashlib
