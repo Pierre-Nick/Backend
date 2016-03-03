@@ -55,5 +55,4 @@ def service_request(data, connection):
 	result = None
 	print(data)
 	connection.send("Hello".encode("utf-8"))
-	connection.close()
 	return
