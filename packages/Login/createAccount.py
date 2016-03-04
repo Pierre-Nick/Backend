@@ -16,6 +16,7 @@ import pymysql as MySQLdb
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from packages.Log import kwlog
+from validate_email import validate_email
 import string
 import hashlib
 
@@ -185,6 +186,9 @@ def add_new_user(username, fname, lname, email, hash):
             kwlog.log("Email check failed")
             kwlog.log("Email already connected to another account")
             return "ACCOUNT_ALREADY_EXIST_FOR_EMAIL"
+        elif validate_email(str(email),verify=True):
+            kwlog.log("Email is invaild")
+            return "EMAIL_NOT_VAILD"
         else:
             kwlog.log("Checks passed, creating account")
             if create_account(username, fname, lname, email, hash):

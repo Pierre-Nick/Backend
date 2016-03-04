@@ -10,7 +10,7 @@
 ###################################################################
 
 from datetime import *
-from urllib2 import urlopen
+from urllib.request import urlopen
 import json
 import pymysql as MySQLdb
 from packages.Log import kwlog
