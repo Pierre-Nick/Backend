@@ -10,16 +10,17 @@
 #####          all information from the user is vaild         #####
 ###################################################################
 
-from packages.Login.checkLogin import *
+from packages.Login.checkLogin import user_exist
 import smtplib
 import pymysql as MySQLdb
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from packages.Log import kwlog
 #from validate_email import validate_email
+from datetime import datetime, timedelta
 import string
 import hashlib
-
+import random
 
 def check_if_email_exist(email):
     sql = "SELECT * FROM User_Information WHERE Email = '%s';" % (email)
@@ -124,6 +125,7 @@ def create_confirmation_email(fname, email, username):
             kwlog.log("Email failed to be sent")
             return False
     except:
+        raise 
         kwlog.log("Error during code generation")
 
 
@@ -172,6 +174,7 @@ def create_account(username, fname, lname, email, hash):
     except:
         #db.rollback()
         #db.close()
+        raise
         kwlog.log("Database Error in create account")
         return False
 

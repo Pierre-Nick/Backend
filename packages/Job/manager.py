@@ -4,7 +4,8 @@ import urllib
 from packages.Log import kwlog
 from packages.Job.util import value_from_header
 from packages.Login.createAccount import add_new_user
-from packages.Login.updateAccount import update_account_activation_status
+from packages.Login.updateAccount import update_account_activation_stats
+from packages.Login.checkLogin import login_to_account
 from packages.Listen.reply import send
 worker_cap = 7
 job_queue = []
@@ -72,8 +73,13 @@ def service_request(data, connection):
 	if command == "activate":
 		code = value_from_header(data, "code")
 		userid = value_from_header(data, "userid")
-		result = update_account_activation_status(code, userid)
-		
+		result = update_account_activation_stats( userid, code)
+	
+	if command == "login":
+		username = value_from_header(data, 'username')
+		password = value_from_header(data, 'password')
+		kwlog.log(str(username + ":"+ password))
+		result = login_to_account(username, password.encode("utf-8"))
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))

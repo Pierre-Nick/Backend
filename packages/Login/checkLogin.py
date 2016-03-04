@@ -13,8 +13,19 @@
 import pymysql as MySQLdb
 import random
 from datetime import datetime, timedelta
-from packages.Login.createAccount import *
+#from packages.Login.createAccount import encrypt_password
+import hashlib
 from packages.Log import kwlog
+
+
+def encrypt_password(password):
+    # Make password more secure
+    # Return str
+    kwlog.log("hashing hash")
+    h = hashlib.md5()
+    h.update(password)
+    h.update(b"EVERYONE_LOVES_KITCHENWIZARD!")
+    return h.hexdigest()
 
 
 def safetyCheck(usr):
@@ -36,12 +47,14 @@ def user_exist(usr):
     # Check if userid exist
     # Return str
     kwlog.log("Checking if user is in DB")
+    print(usr)
     if(safetyCheck(usr)):
         kwlog.log("safety check, passed")
         db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
         kwlog.log("Connected to DB")
         cursor = db.cursor()
         sql = "SELECT UserID FROM User_Information WHERE UserID = '%s'" % usr
+        print(sql)
         cursor.execute(sql)
         kwlog.log("SQL excuted correctly")
         data = cursor.fetchone()
@@ -119,7 +132,7 @@ def check_active_status(username):
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
     cursor = db.cursor()
-    sql = "SELECT IsActivated FROM User_Information WHERE User_id = '%s'" % userid
+    sql = "SELECT IsActivated FROM User_Information WHERE UserID = '%s'" % username
     cursor.execute(sql)
     kwlog.log("SQL excuted correctly")
     data = cursor.fetchone()
@@ -148,7 +161,7 @@ def generate_session_key(username):
 def login_to_account(username, password):
     # Performs login of the account
     # Return str
-    kwlog.log(("Login request by ", username))
+    kwlog.log(("Login request by " + username))
     if(user_exist(username) == "ID_FOUND"):
         if(check_password_hash(username, password)):
             if(check_active_status(username)):
