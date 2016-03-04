@@ -73,7 +73,7 @@ def generate_confirmation_code(username):
         return "ERROR_ADDING_CODE_DB"
 
 
-def send_confirmation_email(fname, email, code):
+def send_confirmation_email(fname, email, code, userid):
     # Sends confirmation email
     # Return bool
     kwlog.log("Create email request")
@@ -91,11 +91,11 @@ def send_confirmation_email(fname, email, code):
 
         Let us be the first to welcome you to the easiest way to track what is happening in your kitchen. Before we get started we need you to complete the activation process by clicking the link below.
 
-        CLICK HERE: http://52.36.126.156:8080?type=activate&code=%s
+        CLICK HERE: http://52.36.126.156:8080?command=activate&code=%s&userid=%s
 
         Thank You,
         Kitchen Wizard Support Team
-        """ % (fname, code)
+        """ % (fname, code, userid)
     msg.attach(MIMEText(body, 'plain'))
     kwlog.log("Sending message...")
     try:
@@ -117,7 +117,7 @@ def create_confirmation_email(fname, email, username):
         if code == "ERROR_ADDING_CODE_DB":
             kwlog.log("Unable to add code to DB, Failing")
             return False
-        if send_confirmation_email(fname, email, code):
+        if send_confirmation_email(fname, email, code, username):
             kwlog.log("Email sent!")
             return True
         else:
