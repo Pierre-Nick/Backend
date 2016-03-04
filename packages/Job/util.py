@@ -1,7 +1,12 @@
-def strip_headers(data_array):
-	split_point = 0
-	for x in range(len(data_array)):
-		if data_array[x] is "":
-			split_point = x
-			break
-	return data_array[x+1:]
+from packages.Log import kwlog
+import re
+
+def value_from_header(data, attribute):
+	kwlog.log("looking for "+ str(attribute))
+	result = re.search(str(attribute)+"=[^&]*&", data[0])
+	kwlog.log("found: " + str(result))
+	if result is None:
+		return "Error"
+	else:
+		return result.group(0).split("=")[1].split('&')[0]
+

@@ -2,14 +2,15 @@ import threading
 import re
 import urllib
 from packages.Log import kwlog
-from packages.Job.util import strip_headers
+from packages.Job.util import value_from_header
 from packages.Login.createAccount import add_new_user
+from packages.Listen.reply import send
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
 
 def start_job(connection):
-	data = connection.recv(4096).decode("utf-8")
+	data = urllib.parse.unquote(connection.recv(4096).decode("utf-8"))
 	data = data.split('\r\n')
 	thread =threading.Thread(target=service_request, args=(data,connection))
 	add_job(thread)
@@ -25,11 +26,12 @@ def add_job(thread):
 			if len(job_queue) == worker_cap:
 				kwlog.log("Error Job queue filled")
 			job_queue_blocked = True
+			kwlog.log("Job added to queue")
 			thread.start()
 			job_queue.append(thread)
 			job_queue_blocked = False
 			break
-	kwlog.log("Job added to queue")
+	
 	
 def remove_job(thread):
 	global job_queue
@@ -42,7 +44,7 @@ def remove_job(thread):
                         job_queue.remove(thread)
                         job_queue_blocked = False
                         break
-	kwlog.log("job removed from queue")
+	kwlog.log("Job removed from queue")
 
 def monitor_jobs():
 	global job_queue
@@ -52,21 +54,24 @@ def monitor_jobs():
 				remove_job(thread)
 			
 def service_request(data, connection):
-	result = None
-	print(data[0])
-	if "command=register" in data[0]:
-		username = re.search("username=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
-		print(username)
-		fname = re.search("fname=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
-		print(fname)
-		lname = re.search("lname=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
-		print(lname)
-		email = re.search("email=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0].replace("%40","@")
-		print(email)
-		password = re.search("password=[^&]*&", data[0]).group(0).split("=")[1].split('&')[0]
-		print(password)
-	
-	connection.send("HTTP/1.1 200 OK\n\nHello".encode("utf-8"))
-	add_new_user(username, fname, lname, email, password.encode("utf-8"))
+	result = None 
+	command = value_from_header(data, 'command')
+	if command == "Error":
+		print(str(data))
+		connection.close()
+		return
+	if command == 'register':
+		username = data_from_header(data, 'username')
+		fname = value_from_header(data, 'fname')
+		lname = value_from_header(data, 'lname') 
+		email = value_from_header(data, 'email')
+		password = value_from_header(data, 'password')
+		result = add_new_user(username, fname, lname, email, password.encode("utf-8"))
+	if command == "test":
+		result = "success"
+	kwlog.log("Result: " + str(result))
+	send(result, connection)
+	kwlog.log("Result sent")
 	connection.close()
+	kwlog.log("Connection closing")
 	return
