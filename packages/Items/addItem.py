@@ -176,8 +176,9 @@ def __get_product_details_from_api(barcode):
     # Get details of product
     # Return list
     url = "http://api.foodessentials.com/labelarray?u=%s&sid=9fe4492b-492e-4336-86b8-7d278e02aa51&n=2&s=0&f=json&api_key=mvdrrzwt9327ttazxse6f95b" % (str(barcode))
-    response = urlopen(url)
-    j_obj = json.load(response)
+    response = urlopen(url).read()
+    j_obj = json.loads(response.decode("utf-8"))
+    print(j_obj)
     item = []
     for i in j_obj['productsArray']:
         item.append(str(barcode))

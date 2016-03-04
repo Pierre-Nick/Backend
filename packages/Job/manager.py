@@ -7,6 +7,8 @@ from packages.Login.createAccount import add_new_user
 from packages.Login.updateAccount import update_account_activation_stats
 from packages.Login.checkLogin import login_to_account
 from packages.Listen.reply import send
+from packages.Items.addItem import add_new_item
+from packages.Items.getItemList import get_item_list
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -80,6 +82,14 @@ def service_request(data, connection):
 		password = value_from_header(data, 'password')
 		kwlog.log(str(username + ":"+ password))
 		result = login_to_account(username, password.encode("utf-8"))
+	
+	if command == "additem":
+		barcode = value_from_header(data, 'barcode')
+		sessionkey = value_from_header(data, 'sessionkey')
+		result = add_new_item(barcode, sessionkey)
+	if command == "getitems":
+		sessionkey = value_from_header(data, 'sessionkey')
+		result = get_item_list(sessionkey)
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))
