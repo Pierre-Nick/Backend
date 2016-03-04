@@ -16,7 +16,7 @@ import pymysql as MySQLdb
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from packages.Log import kwlog
-from validate_email import validate_email
+#from validate_email import validate_email
 import string
 import hashlib
 
