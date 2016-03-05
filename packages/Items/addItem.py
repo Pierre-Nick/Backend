@@ -177,17 +177,19 @@ def __get_product_details_from_api(barcode):
     # Return list
     url = "http://api.foodessentials.com/labelarray?u=%s&sid=9fe4492b-492e-4336-86b8-7d278e02aa51&n=2&s=0&f=json&api_key=mvdrrzwt9327ttazxse6f95b" % (str(barcode))
     response = urlopen(url).read()
-    j_obj = json.loads(response.decode("utf-8"))
-    print(j_obj)
-    item = []
-    for i in j_obj['productsArray']:
-        item.append(str(barcode))
-        item.append(str(i['product_name']))
-        item.append(str(i['product_description']))
-        item.append(str(i['manufacturer']))
-        item.append(str(i['product_size']))
-        item.append(str(__get_group_id(str(i['shelf']))))
-    return item
+    if len(response) > 0:
+        j_obj = json.loads(response.decode("utf-8"))
+        item = []
+        for i in j_obj['productsArray']:
+            item.append(str(barcode))
+            item.append(str(i['product_name']))
+            item.append(str(i['product_description']))
+            item.append(str(i['manufacturer']))
+            item.append(str(i['product_size']))
+            item.append(str(__get_group_id(str(i['shelf']))))
+        return item
+    else:
+        return "No_Information"
 
 def __add_product_to_DB(item):
     # Add product details from API to Database
@@ -218,6 +220,9 @@ def __add_item_to_inventory(barcode, userid):
     # Return bool
     if not __product_is_in_DB(barcode):
         item = __get_product_details_from_api(barcode)
+        if item == "No_Information":
+            kwlog.log("API does not contain product")
+            return "No_Information_Available"
         if not __add_product_to_DB(item):
             return False
 
@@ -241,32 +246,43 @@ def __add_item_to_inventory(barcode, userid):
         return False
 
 
-def __get_inventory_id(barcode, userid):
-    # Get id for latest item added with particular barcode by user
-    # Return str
-    sql = "SELECT InventoryID FROM Inventory WHERE ProductID = '%s' AND UserID = '%s';" % (str(barcode), str(userid))
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchall()
-    db.close()
-    kwlog.log("DB closed")
-    return str(data[(len(data)-1)])
+# Remove in Version 0.41
+#def __get_inventory_id(barcode, userid):
+#     # Get id for latest item added with particular barcode by user
+#     # Return str
+#     sql = "SELECT InventoryID FROM Inventory WHERE ProductID = '%s' AND UserID = '%s';" % (str(barcode), str(userid))
+#     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
+#     kwlog.log("Connected to DB")
+#     cursor = db.cursor()
+#     cursor.execute(sql)
+#     kwlog.log("SQL excuted correctly")
+#     data = cursor.fetchall()
+#     db.close()
+#     kwlog.log("DB closed")
+#     return str(data[(len(data)-1)])
+def __clean_barcode(barcode):
+    # Clean '+' out of some barcode
+    # Return: str
+    kwlog.log("Clean barcode")
+    if '+' in barcode
+        return barcode.strip('+')
+    else:
+        return barcode
+
 
 def add_new_item(barcode, session):
     # Add new item to inventory of user
     # Return str
     kwlog.log("Adding new item")
     userid=__get_userid_from_key(session)
+    barcode = __clean_barcode(barcode)
     if userid == 'BAD_KEY':
         kwlog.log("Add item failed")
         return "ADD_FAILED"
     else:
         if __add_item_to_inventory(barcode, userid):
             kwlog.log("New item added")
-            return __get_inventory_id(barcode, userid)
+            return "ITEM_ADDED"
         else:
             kwlog.log("Add item failed")
             return "ADD_FAILED"

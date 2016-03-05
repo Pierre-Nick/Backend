@@ -16,7 +16,7 @@ import pymysql as MySQLdb
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from packages.Log import kwlog
-#from validate_email import validate_email
+from validate_email import validate_email
 from datetime import datetime, timedelta
 import string
 import hashlib
@@ -41,7 +41,6 @@ def check_if_email_exist(email):
 def add_confirmation_to_db(code, username):
     # Adds confirmation code to DB
     # Return bool
-    print(code)
     sql = "INSERT INTO Activation_Key (Code, UserID) VALUES ('%s', '%s');" % (str(code), str(username))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
@@ -92,7 +91,7 @@ def send_confirmation_email(fname, email, code, userid):
 
         Let us be the first to welcome you to the easiest way to track what is happening in your kitchen. Before we get started we need you to complete the activation process by clicking the link below.
 
-        CLICK HERE: http://52.36.126.156:8080?command=activate&code=%s&userid=%s
+        CLICK HERE: http://52.36.126.156:8080?command=activate&code=%s&userid=%s&
 
         Thank You,
         Kitchen Wizard Support Team
@@ -125,7 +124,7 @@ def create_confirmation_email(fname, email, username):
             kwlog.log("Email failed to be sent")
             return False
     except:
-        raise 
+        raise
         kwlog.log("Error during code generation")
 
 
@@ -189,9 +188,9 @@ def add_new_user(username, fname, lname, email, hash):
             kwlog.log("Email check failed")
             kwlog.log("Email already connected to another account")
             return "ACCOUNT_ALREADY_EXIST_FOR_EMAIL"
-        #elif validate_email(str(email)):
-         #   kwlog.log("Email is invaild")
-          #  return "EMAIL_NOT_VAILD"
+        elif not validate_email(str(email)):
+            kwlog.log("Email is invaild")
+            return "EMAIL_NOT_VAILD"
         else:
             kwlog.log("Checks passed, creating account")
             if create_account(username, fname, lname, email, hash):

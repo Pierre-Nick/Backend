@@ -13,7 +13,6 @@
 import pymysql as MySQLdb
 import random
 from datetime import datetime, timedelta
-#from packages.Login.createAccount import encrypt_password
 import hashlib
 from packages.Log import kwlog
 
@@ -47,14 +46,12 @@ def user_exist(usr):
     # Check if userid exist
     # Return str
     kwlog.log("Checking if user is in DB")
-    print(usr)
     if(safetyCheck(usr)):
         kwlog.log("safety check, passed")
         db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
         kwlog.log("Connected to DB")
         cursor = db.cursor()
         sql = "SELECT UserID FROM User_Information WHERE UserID = '%s'" % usr
-        print(sql)
         cursor.execute(sql)
         kwlog.log("SQL excuted correctly")
         data = cursor.fetchone()

@@ -51,7 +51,7 @@ def __get_items_for_user(userid):
     # Get items for a userid
     # Return list
     kwlog.log("Get items for user from DB")
-    sql = "SELECT ProductID FROM Inventory WHERE UserID = '%s';" % (userid)
+    sql = "SELECT InventoryID, ProductID FROM Inventory WHERE UserID = '%s';" % (userid)
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
     cursor = db.cursor()
@@ -66,15 +66,12 @@ def __get_items_for_user(userid):
 def __create_response_list(items):
     # Create and return the list of products
     # Return list
-    temp = []
     final = []
     kwlog.log("Create list of products, for UI")
 
     for i in items:
-        temp.append(__get_product_information(str(i[0])))
-
-    for j in temp:
-        k=[j[0], j[1], j[2], j[3], j[4], __get_group_image(str(j[5]))]
+        temp = __get_product_information(str(i[0]))
+        k=[i[0], temp[1], temp[2], temp[3], temp[4], __get_group_image(str(temp[5]))]
         final.append(k)
 
     return final
