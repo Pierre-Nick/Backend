@@ -11,7 +11,7 @@
 
 from datetime import *
 import pymysql as MySQLdb
-from addItem import __get_userid_from_key
+from packages.Items.addItem import __get_userid_from_key
 from packages.Log import kwlog
 
 
@@ -35,7 +35,6 @@ def __item_in_inventory(item_id, userid):
 def __remove_item_from_db(item_id):
     kwlog.log("Request to remove item from db")
     sql = "DELETE FROM Inventory WHERE InventoryID = '%s';" % (item_id)
-    print sql
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
     cursor = db.cursor()

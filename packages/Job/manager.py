@@ -9,6 +9,7 @@ from packages.Login.checkLogin import login_to_account
 from packages.Listen.reply import send
 from packages.Items.addItem import add_new_item
 from packages.Items.getItemList import get_item_list
+from packages.Items.removeItem import remove_item
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -90,6 +91,12 @@ def service_request(data, connection):
 	if command == "getitems":
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = get_item_list(sessionkey)
+	
+	if command == "removeitem":
+		product_id = value_from_header(data, 'id')
+		sessionkey = value_from_header(data, 'sessionkey')
+		result = remove_item(product_id, sessionkey)
+
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))
