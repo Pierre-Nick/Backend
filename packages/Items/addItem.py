@@ -264,7 +264,7 @@ def __clean_barcode(barcode):
     # Clean '+' out of some barcode
     # Return: str
     kwlog.log("Clean barcode")
-    if '+' in barcode
+    if '+' in barcode:
         return barcode.strip('+')
     else:
         return barcode
