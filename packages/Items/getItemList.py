@@ -71,7 +71,6 @@ def __create_response_list(items):
 
     for i in items:
         temp = __get_product_information(str(i[1]))
-        print(temp)
         k=[i[0], temp[1], temp[2], temp[3], temp[4], __get_group_image(str(temp[5]))]
         final.append(k)
 

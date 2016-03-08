@@ -179,6 +179,7 @@ def __get_product_details_from_api(barcode):
     response = urlopen(url).read()
     if len(response) > 0:
         j_obj = json.loads(response.decode("utf-8"))
+        print(j_obj['productsArray'])
         item = []
         for i in j_obj['productsArray']:
             item.append(str(barcode))
@@ -280,7 +281,10 @@ def add_new_item(barcode, session):
         kwlog.log("Add item failed")
         return "ADD_FAILED"
     else:
-        if __add_item_to_inventory(barcode, userid):
+        ret = __add_item_to_inventory(barcode, userid)
+        if ret:
+            if ret == "No_Information_Available":
+                return "ADD_FAILED_PRODUCT_NOT_IN_API"
             kwlog.log("New item added")
             return "ITEM_ADDED"
         else:
