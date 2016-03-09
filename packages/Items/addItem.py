@@ -194,12 +194,14 @@ def __get_product_details_from_api(barcode):
 
 
 def __clean_item_return_from_api(item):
+    k = []
     for i in item:
         print(i)
         if "'" in str(i):
             i = i[:i.index("'")] + "'" + i[i.index("'"):]
-    print(item)
-    return item
+        k.append(i)
+    print(k)
+    return k
 
 def __add_product_to_DB(item):
     # Add product details from API to Database
