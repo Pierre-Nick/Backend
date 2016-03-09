@@ -12,28 +12,14 @@
 from datetime import *
 from urllib.request import urlopen
 import json
-import pymysql as MySQLdb
 from packages.Log import kwlog
+from packages.Database import MySQL
 
-
-def __get_session_key_expire_data(key):
-    # Get expiration date for key
-    # Return str
-    sql = "SELECT AgeOffDate FROM Session_Key WHERE SessionKey = '%s'" % (str(key))
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-    return str(data[0])
 
 def __check_vaild_date(key):
     # Checks if key vaild date has passed
     # return bool
-    d = str(__get_session_key_expire_data(key))
+    d = str(get_session_key_expire_data(key))
     d1 = datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
     d2 = datetime.now()
     return d1 > d2
@@ -42,21 +28,12 @@ def __session_key_exist(key):
     # Checks Session Key exist
     # Return bool
     if __check_vaild_date(key):
-        sql = "SELECT UserID FROM Session_Key WHERE SessionKey = '%s';" % (key)
-        db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-        kwlog.log("Connected to DB")
-        cursor = db.cursor()
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        data = cursor.fetchone()
-        db.close()
-        kwlog.log("DB closed")
-        if data:
+        if get_userid_from_session_key(key):
             return True
         else:
             return False
     else:
-        kwlog.log("Hey has expired")
+        kwlog.log("Key has expired")
         return False
 
 
@@ -80,16 +57,7 @@ def __get_userid_from_key(key):
     # Return str
     kwlog.log("Get userid from key")
     if(__vaildate_sessionkey(key)):
-        sql = "SELECT UserID FROM Session_Key WHERE SessionKey = '%s';" % (key)
-        db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-        kwlog.log("Connected to DB")
-        cursor = db.cursor()
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        data = cursor.fetchone()
-        db.close()
-        kwlog.log("DB closed")
-        return str(data[0])
+        return get_userid_from_key(key)
     else:
         return "BAD_KEY"
 
@@ -97,16 +65,7 @@ def __get_userid_from_key(key):
 def __product_is_in_DB(barcode):
     # Check if the product is in the DB
     # Return bool
-    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';" % (barcode)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-    if data:
+    if get_product_by_barcode(barcode):
         return True
     else:
         return False
@@ -115,17 +74,7 @@ def __product_is_in_DB(barcode):
 def __group_in_db(name):
     # Checks if group is contained in DB
     # Return bool
-    sql = "SELECT * FROM Grouping WHERE GroupName = '%s'" % (name)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-
-    if data:
+    if get_group_by_name(name):
         return True
     else:
         return False
@@ -134,23 +83,7 @@ def __group_in_db(name):
 def __add_group_to_db(name):
     # Adds group to DB
     # Return bool
-    kwlog.log("Add group to DB request")
-    sql = "INSERT INTO `KitchenWizard`.`Grouping` (`GroupName`, `DateAdded`) VALUES ('%s', '%s');" % (str(name), str(datetime.now()))
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    try:
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-        db.close()
-        kwlog.log("DB closed")
-        return True
-    except:
-        db.rollback()
-        db.close()
-        kwlog.log("Error adding to DB")
-        return False
+    return put_group(name)
 
 
 def __get_group_id(name):
@@ -160,16 +93,8 @@ def __get_group_id(name):
         __add_group_to_db(name)
 
     # Get ID
-    sql = "SELECT GroupID FROM Grouping WHERE GroupName = '%s'" % (name)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-    return str(data[0])
+    data = get_group_by_name(name)[0]
+    return str(data)
 
 
 def __get_product_details_from_api(barcode):
@@ -193,40 +118,11 @@ def __get_product_details_from_api(barcode):
         return "No_Information"
 
 
-# def __clean_item_return_from_api(item):
-#     k = []
-#     for i in item:
-#         print(i)
-#         if "'" in str(i):
-#             i = i[:(i.index("'") - 1)] + "\\'" + i[i.index("'"):]
-#         k.append(i)
-#     print(k)
-#     return k
-
 def __add_product_to_DB(item):
     # Add product details from API to Database
     # Return bool
     #{0: Barcode, 1: Name, 2:details, 3:Maker, 4:size, 5:group}
-    kwlog.log("Add product request")
-    #item = __clean_item_return_from_api(item)
-    sql = "INSERT INTO `KitchenWizard`.`ProductInformation` (`ProductID`, `ProductName`, `ProductDiscription`, `Manufacturer`, `Quantity`, `GroupID`) VALUES (%s, %s, %s, %s, %s, %s);"
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    try:
-        kwlog.log("Inside try")
-        cursor.execute(sql,(str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4]), str(item[5])))
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-        db.close()
-        kwlog.log("DB closed")
-        return True
-    except:
-        db.rollback()
-        db.close()
-        raise
-        kwlog.log("Error adding to DB")
-        return False
+    return put_new_product(item)
 
 
 def __add_item_to_inventory(barcode, userid):
@@ -241,23 +137,7 @@ def __add_item_to_inventory(barcode, userid):
             return False
 
     # Add item to inventory
-    kwlog.log("Add to inventory request")
-    sql = "INSERT INTO `KitchenWizard`.`Inventory` (`UserID`, `ProductID`, `DateAdded`) VALUES ('%s', '%s', '%s');" % (str(userid), str(barcode), str(datetime.now()))
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    try:
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-        db.close()
-        kwlog.log("DB closed")
-        return True
-    except:
-        db.rollback()
-        db.close()
-        kwlog.log("Error adding to DB")
-        return False
+    return put_item_in_inventory(barcode, userid)
 
 
 def __clean_barcode(barcode):
