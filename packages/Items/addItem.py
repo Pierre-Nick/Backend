@@ -192,12 +192,22 @@ def __get_product_details_from_api(barcode):
     else:
         return "No_Information"
 
+
+def __clean_item_return_from_api(item):
+    for i in item:
+        print(i)
+        if "'" in str(i):
+            i = i[:i.index("'")] + "'" + i[i.index("'"):]
+    print(item)
+    return item
+
 def __add_product_to_DB(item):
     # Add product details from API to Database
     # Return bool
     #{0: Barcode, 1: Name, 2:details, 3:Maker, 4:size, 5:group}
     kwlog.log("Add product request")
-    sql = "INSERT INTO `KitchenWizard`.`ProductInformation` (`ProductID`, `ProductName`, `ProductDiscription`, `Manufacturer`, `Quantity`, `GroupID`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4]), str(item[5]))
+    item = __clean_item_return_from_api(item)
+    sql = "INSERT INTO `KitchenWizard`.`ProductInformation` (`ProductID`, `ProductName`, `ProductDiscription`, `Manufacturer`, `Quantity`, `GroupID`) VALUES (%s, %s, '%s', '%s', '%s', '%s');" % (str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4]), str(item[5]))
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
     cursor = db.cursor()
@@ -247,20 +257,6 @@ def __add_item_to_inventory(barcode, userid):
         return False
 
 
-# Remove in Version 0.41
-#def __get_inventory_id(barcode, userid):
-#     # Get id for latest item added with particular barcode by user
-#     # Return str
-#     sql = "SELECT InventoryID FROM Inventory WHERE ProductID = '%s' AND UserID = '%s';" % (str(barcode), str(userid))
-#     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-#     kwlog.log("Connected to DB")
-#     cursor = db.cursor()
-#     cursor.execute(sql)
-#     kwlog.log("SQL excuted correctly")
-#     data = cursor.fetchall()
-#     db.close()
-#     kwlog.log("DB closed")
-#     return str(data[(len(data)-1)])
 def __clean_barcode(barcode):
     # Clean '+' out of some barcode
     # Return: str
