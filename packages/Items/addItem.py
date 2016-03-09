@@ -193,29 +193,29 @@ def __get_product_details_from_api(barcode):
         return "No_Information"
 
 
-def __clean_item_return_from_api(item):
-    k = []
-    for i in item:
-        print(i)
-        if "'" in str(i):
-            i = i[:(i.index("'") - 1)] + "\\'" + i[i.index("'"):]
-        k.append(i)
-    print(k)
-    return k
+# def __clean_item_return_from_api(item):
+#     k = []
+#     for i in item:
+#         print(i)
+#         if "'" in str(i):
+#             i = i[:(i.index("'") - 1)] + "\\'" + i[i.index("'"):]
+#         k.append(i)
+#     print(k)
+#     return k
 
 def __add_product_to_DB(item):
     # Add product details from API to Database
     # Return bool
     #{0: Barcode, 1: Name, 2:details, 3:Maker, 4:size, 5:group}
     kwlog.log("Add product request")
-    item = __clean_item_return_from_api(item)
-    sql = "INSERT INTO `KitchenWizard`.`ProductInformation` (`ProductID`, `ProductName`, `ProductDiscription`, `Manufacturer`, `Quantity`, `GroupID`) VALUES (%s, %s, '%s', '%s', '%s', '%s');" % (str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4]), str(item[5]))
+    #item = __clean_item_return_from_api(item)
+    sql = "INSERT INTO `KitchenWizard`.`ProductInformation` (`ProductID`, `ProductName`, `ProductDiscription`, `Manufacturer`, `Quantity`, `GroupID`) VALUES (%s, %s, %s, %s, %s, %s);"
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     kwlog.log("Connected to DB")
     cursor = db.cursor()
     try:
         kwlog.log("Inside try")
-        cursor.execute(sql)
+        cursor.execute(sql,(str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4]), str(item[5])))
         kwlog.log("SQL excuted correctly")
         db.commit()
         db.close()
