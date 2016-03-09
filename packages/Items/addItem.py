@@ -198,7 +198,7 @@ def __clean_item_return_from_api(item):
     for i in item:
         print(i)
         if "'" in str(i):
-            i = i[:i.index("'")] + "'" + i[i.index("'"):]
+            i = i[:(i.index("'") - 1)] + "\\'" + i[i.index("'"):]
         k.append(i)
     print(k)
     return k
@@ -224,6 +224,7 @@ def __add_product_to_DB(item):
     except:
         db.rollback()
         db.close()
+        raise
         kwlog.log("Error adding to DB")
         return False
 
