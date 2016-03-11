@@ -10,9 +10,9 @@
 ###################################################################
 
 from datetime import *
-import pymysql as MySQLdb
 from packages.Items.addItem import __get_userid_from_key
 from packages.Log import kwlog
+from packages.Database import MySQL
 
 
 def __item_in_inventory(item_id, userid):
