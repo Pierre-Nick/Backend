@@ -77,6 +77,13 @@ def is_item_in_inventory(item_id, userid):
     data = cursor.fetchone()
     return data
 
+
+def is_email_in_database(email):
+    sql = "SELECT * FROM User_Information WHERE Email = '%s';"
+    cursor.execute(sql, email)
+    data = cursor.fetchone()
+    return data
+
 def put_group(name):
     kwlog.log("Put group")
     sql = "INSERT INTO `KitchenWizard`.`Grouping` (`GroupName`, `DateAdded`) VALUES (%s, %s);"
@@ -113,6 +120,18 @@ def put_item_in_inventory(barcode, userid):
     except:
         db.rollback()
         kwlog.log("Error adding item to inventory")
+        return False
+
+
+def put_confirmation_code_in_database(code, username):
+    sql = "INSERT INTO Activation_Key (Code, UserID) VALUES ('%s', '%s');"
+    try:
+        cursor.execute(sql, (str(code), str(username)))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        kwlog.log("Error adding confirmation code to DB")
         return False
 
 

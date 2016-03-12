@@ -12,26 +12,18 @@
 
 from packages.Login.checkLogin import user_exist
 import smtplib
-import pymysql as MySQLdb
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from packages.Log import kwlog
 from validate_email import validate_email
 from datetime import datetime, timedelta
+from packages.Database import MySQL
 import string
 import hashlib
 import random
 
 def check_if_email_exist(email):
-    sql = "SELECT * FROM User_Information WHERE Email = '%s';" % (email)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
+    data = MySQL.is_email_in_database(email)
     if not data:
         return False
     else:
@@ -41,22 +33,7 @@ def check_if_email_exist(email):
 def add_confirmation_to_db(code, username):
     # Adds confirmation code to DB
     # Return bool
-    sql = "INSERT INTO Activation_Key (Code, UserID) VALUES ('%s', '%s');" % (str(code), str(username))
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    try:
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-        db.close()
-        kwlog.log("DB closed")
-        return True
-    except:
-        db.rollback()
-        db.close()
-        kwlog.log("Error adding confirmation to DB")
-        return False
+    return MySQL.put_confirmation_code_in_database(code, username)
 
 
 def generate_confirmation_code(username):
