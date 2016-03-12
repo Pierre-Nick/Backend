@@ -10,57 +10,27 @@
 ###################################################################
 
 from datetime import *
-import pymysql as MySQLdb
 from packages.Items.addItem import __get_userid_from_key
 from packages.Log import kwlog
+from packages.Database import MySQL
 
 
 def __get_product_information(Product):
     # Get the product information
     # return list
-    kwlog.log("Get product information")
-    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';" % (str(Product))
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-    return data
+    return MySQL.get_product_by_barcode(Product)
 
 
 def __get_group_image(group_id):
     # Get the image of a product for a group
     # return str
-    kwlog.log("Get url for group image")
-    sql = "SELECT GroupImage FROM Grouping WHERE GroupID = '%s';" % (group_id)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-    return str(data[0])
+    return MySQL.get_group_image_by_id(group_id)
 
 
 def __get_items_for_user(userid):
     # Get items for a userid
     # Return list
-    kwlog.log("Get items for user from DB")
-    sql = "SELECT InventoryID, ProductID FROM Inventory WHERE UserID = '%s';" % (userid)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchall()
-    db.close()
-    kwlog.log("DB closed")
-    return data
+    return MySQL.get_inventory_list_for_user(userid)
 
 
 def __create_response_list(items):

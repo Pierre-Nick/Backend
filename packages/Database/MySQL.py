@@ -51,17 +51,31 @@ def get_userid_from_session_key(key):
 
 def get_product_by_barcode(barcode):
     kwlog.log("Get product by barcode")
-    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';" % (barcode)
-    cursor.execute(sql)
+    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';"
+    cursor.execute(sql, (barcode))
     return cursor.fetchone()
 
 
 def get_group_by_name(name):
     kwlog.log("Get category by name")
-    sql = "SELECT * FROM Grouping WHERE GroupName = '%s'" % (name)
-    cursor.execute(sql)
+    sql = "SELECT * FROM Grouping WHERE GroupName = '%s';"
+    cursor.execute(sql, name)
     return cursor.fetchone()
 
+
+def get_inventory_list_for_user(userid):
+    kwlog.log("Get items for user from DB")
+    sql = "SELECT InventoryID, ProductID FROM Inventory WHERE UserID = '%s';"
+    cursor.execute(sql, userid)
+    data = cursor.fetchall()
+    return data
+
+
+def is_item_in_inventory(item_id, userid):
+    sql = "SELECT * FROM Inventory WHERE UserID = '%s' AND InventoryID = '%s';"
+    cursor.execute(sql, (str(userid), str(item_id)))
+    data = cursor.fetchone()
+    return data
 
 def put_group(name):
     kwlog.log("Put group")
@@ -100,3 +114,20 @@ def put_item_in_inventory(barcode, userid):
         db.rollback()
         kwlog.log("Error adding item to inventory")
         return False
+
+
+def remove_item_from_inventory(item_id):
+    sql = "DELETE FROM Inventory WHERE InventoryID = '%s';"
+    try:
+        cursor.execute(sql, (item_id))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False
+
+def get_group_image_by_id(group_id):
+    sql = "SELECT GroupImage FROM Grouping WHERE GroupID = '%s';" % (group_id)
+    cursor.execute(sql)
+    data = cursor.fetchone()
+    return str(data[0])

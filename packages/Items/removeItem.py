@@ -16,41 +16,13 @@ from packages.Database import MySQL
 
 
 def __item_in_inventory(item_id, userid):
-    kwlog.log("Checking if item is in inventory")
-    sql = "SELECT * FROM Inventory WHERE UserID = '%s' AND InventoryID = '%s';" % (str(userid), str(item_id))
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-
-    if data:
+    if MySQL.is_item_in_inventory(item_id, userid):
         return True
     else:
         return False
 
 def __remove_item_from_db(item_id):
-    kwlog.log("Request to remove item from db")
-    sql = "DELETE FROM Inventory WHERE InventoryID = '%s';" % (item_id)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    try:
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-        db.close()
-        kwlog.log("DB closed")
-        return True
-    except:
-        db.rollback()
-        db.close()
-        kwlog.log("Error adding to DB")
-        return False
-
+    return MySQL.remove_item_from_inventory(item_id)
 
 def remove_item(item_id, session_key):
     userid = __get_userid_from_key(session_key)
