@@ -13,28 +13,13 @@
 from packages.Login.checkLogin import *
 from datetime import datetime
 from packages.Log import kwlog
-import pymysql as MySQLdb
-
-
-def __get_act_code(userid):
-    # Get activation form DB
-    # Return str
-    sql = "SELECT Code FROM Activation_Key WHERE UserID = '%s';" % (userid)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-    return str(data[0])
+from packages.Database import MySQL
 
 
 def __check_code(userid, code):
     # Check code aginst DB
     # Return bool
-    d_code = __get_act_code(userid)
+    d_code = MySQL.get_act_code(userid)
     if d_code == code:
         kwlog.log("Activation code matches")
         return True
@@ -46,15 +31,7 @@ def __check_code(userid, code):
 def __check_act_status(userid):
     # Check if account is activated
     # Return bool
-    sql = "SELECT IsActivated FROM User_Information WHERE UserID = '%s';" % (userid)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
+    data = get_active_status(userid)
     if str(data[0]) == '1':
         return True
     else:
@@ -64,23 +41,7 @@ def __check_act_status(userid):
 def __update_act_status(userid):
     # Updates activation status to activated
     # Return bool
-    kwlog.log("Update activation status")
-    sql = "UPDATE User_Information SET IsActivated = '1' WHERE UserID = '%s';" % (userid)
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    try:
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-        db.close()
-        kwlog.log("DB closed")
-        return True
-    except:
-        db.rollback()
-        db.close()
-        kwlog.log("Error updating activation status to DB")
-        return False
+    return MySQL.update_activation_status_for_user(userid)
 
 
 def update_account_activation_stats(userid, code):

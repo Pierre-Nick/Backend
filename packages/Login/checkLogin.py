@@ -15,6 +15,7 @@ import random
 from datetime import datetime, timedelta
 import hashlib
 from packages.Log import kwlog
+from packages.Database import MySQL
 
 
 def encrypt_password(password):
@@ -47,17 +48,7 @@ def user_exist(usr):
     # Return str
     kwlog.log("Checking if user is in DB")
     if(safetyCheck(usr)):
-        kwlog.log("safety check, passed")
-        db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-        kwlog.log("Connected to DB")
-        cursor = db.cursor()
-        sql = "SELECT UserID FROM User_Information WHERE UserID = '%s'" % usr
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        data = cursor.fetchone()
-        db.close()
-        kwlog.log("DB closed")
-        if data:
+        if MySQL.is_userid_in_DB(usr):
             return "ID_FOUND"
         else:
             return "NO_ID_FOUND"
@@ -69,17 +60,7 @@ def user_exist(usr):
 def get_hash_for_user(userid):
     # Get hash for user, return hash
     # Return str
-    kwlog.log("DB request for DB-Password")
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    sql = "SELECT PasswordHash FROM Password WHERE User_id = '%s'" % userid
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
-    return data
+    return MySQL.get_hash_for_user(userid)
 
 
 def check_password_hash(userid, hash):
@@ -97,44 +78,17 @@ def check_password_hash(userid, hash):
         return False
 
 
-#def check_password_date(username):
-# Check if date has past required reset date (180 days)
-# Return bool
-# Add in later version (1.0)
-
 def uppdate_session_key(username, ses):
     # Update Session key in DB
     # Return void
-    kwlog.log("DB request update session key")
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    date = datetime.today()
-    date = date + timedelta(6 * 30)
-    sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`='%d', `AgeOffDate`='%s' WHERE `USERID`='%s';" % (ses, date, username)
-    try:
-        cursor.execute(sql)
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-    except:
-        db.rollback()
-    db.close()
-    kwlog.log("DB closed")
+    if not MySQL.update_session_key_for_usr(username, ses):
+        kwlog.log("Error, updating key")
 
 
 def check_active_status(username):
     # Checks if account has been activated
     # Return bool
-    kwlog.log("Check status of account")
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    sql = "SELECT IsActivated FROM User_Information WHERE UserID = '%s'" % username
-    cursor.execute(sql)
-    kwlog.log("SQL excuted correctly")
-    data = cursor.fetchone()
-    db.close()
-    kwlog.log("DB closed")
+    data = MySQL.generate_session_key(username)
     if data[0] == 0:
         kwlog.log("Account not activated")
         return False

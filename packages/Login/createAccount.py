@@ -118,40 +118,14 @@ def encrypt_password(password):
 def create_account(username, fname, lname, email, hash):
     # Create account and add to DB
     # Return bool
-    kwlog.log("Creating Account")
-    d = str(datetime.now())
-    date = datetime.today()
-    date = date + timedelta(6 * 30)
-    hash = encrypt_password(hash)
-    f_sql = "INSERT INTO User_Information (UserID, FirstName, LastName, Email, CreationDate) VALUES ('%s', '%s', '%s', '%s', '%s');" % (username, fname, lname, email, d)
-    p_sql = "INSERT INTO Password (PasswordHash, User_id, UpdatedOn) VALUES ('%s', '%s', '%s');" % (hash, username, d)
-    s_sql = "INSERT INTO Session_Key (UserID, SessionKey, AgeOffDate) VALUES ('%s', '%s', '%s');" % (username, '0000000', date)
-
-    db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
-    kwlog.log("Connected to DB")
-    cursor = db.cursor()
-    try:
-        cursor.execute(f_sql)
-        kwlog.log("User_Information SQL completed")
-        cursor.execute(p_sql)
-        kwlog.log("Password SQL completed")
-        cursor.execute(s_sql)
-        kwlog.log("Session SQL completed")
-        kwlog.log("SQL excuted correctly")
-        db.commit()
-        db.close()
-        kwlog.log("DB closed")
+    if MySQL.put_new_account(username, fname, lname, email, hash):
         if create_confirmation_email(fname, email, username):
             kwlog.log("Account Created, all good")
             return True
         else:
             kwlog.log("Error during creating confirmation email")
             return False
-    except:
-        #db.rollback()
-        #db.close()
-        raise
-        kwlog.log("Database Error in create account")
+    else:
         return False
 
 
