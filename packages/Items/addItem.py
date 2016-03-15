@@ -57,7 +57,7 @@ def __get_userid_from_key(key):
     # Return str
     kwlog.log("Get userid from key")
     if(__vaildate_sessionkey(key)):
-        return get_userid_from_key(key)
+        return get_userid_from_session_key(key)
     else:
         return "BAD_KEY"
 
@@ -119,7 +119,7 @@ def __get_product_details_from_api(barcode):
     response = urlopen(url_pic).read()
     if len(response) > 0:
         j_obj = json.loads(response.decode("utf-8"))
-        print(j_obj)
+        print(j_obj['items'])
         return item
     else:
         return "No_Information"

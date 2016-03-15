@@ -13,11 +13,13 @@
 
 import pymysql as MySQLdb
 from datetime import *
-
-global db
-global cursor
+from packages.Log import kwlog
+db = None
+cursor = None
 
 def init():
+    global db
+    global cursor
     db = MySQLdb.connect("localhost","kitchenWizard","","KitchenWizard")
     cursor = db.cursor()
     kwlog.log("Connected to DB")
@@ -51,8 +53,8 @@ def get_userid_from_session_key(key):
 
 def get_product_by_barcode(barcode):
     kwlog.log("Get product by barcode")
-    sql = "SELECT * FROM ProductInformation WHERE ProductID = '%s';"
-    cursor.execute(sql, (barcode))
+    sql = "SELECT * FROM ProductInformation WHERE ProductID = %s;"
+    cursor.execute(sql, str(barcode))
     return cursor.fetchone()
 
 
