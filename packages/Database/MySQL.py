@@ -60,42 +60,42 @@ def get_product_by_barcode(barcode):
 
 def get_group_by_name(name):
     kwlog.log("Get category by name")
-    sql = "SELECT * FROM Grouping WHERE GroupName = '%s';"
+    sql = "SELECT * FROM Grouping WHERE GroupName = %s;"
     cursor.execute(sql, name)
     return cursor.fetchone()
 
 
 def get_inventory_list_for_user(userid):
     kwlog.log("Get items for user from DB")
-    sql = "SELECT InventoryID, ProductID FROM Inventory WHERE UserID = '%s';"
+    sql = "SELECT InventoryID, ProductID FROM Inventory WHERE UserID = %s;"
     cursor.execute(sql, userid)
     data = cursor.fetchall()
     return data
 
 
 def get_password_hash_for_usr(userid):
-    sql = "SELECT PasswordHash FROM Password WHERE User_id = '%s';"
+    sql = "SELECT PasswordHash FROM Password WHERE User_id = %s;"
     cursor.execute(sql, userid)
     data = cursor.fetchone()
     return data
 
 
 def is_item_in_inventory(item_id, userid):
-    sql = "SELECT * FROM Inventory WHERE UserID = '%s' AND InventoryID = '%s';"
+    sql = "SELECT * FROM Inventory WHERE UserID = '%s' AND InventoryID = %s;"
     cursor.execute(sql, (str(userid), str(item_id)))
     data = cursor.fetchone()
     return data
 
 
 def is_email_in_database(email):
-    sql = "SELECT * FROM User_Information WHERE Email = '%s';"
+    sql = "SELECT * FROM User_Information WHERE Email = %s;"
     cursor.execute(sql, email)
     data = cursor.fetchone()
     return data
 
 
 def is_userid_in_DB(usr):
-    sql = "SELECT UserID FROM User_Information WHERE UserID = '%s';"
+    sql = "SELECT UserID FROM User_Information WHERE UserID = %s;"
     cursor.execute(sql, usr)
     data = cursor.fetchone()
     return data
@@ -141,7 +141,7 @@ def put_item_in_inventory(barcode, userid):
 
 
 def put_confirmation_code_in_database(code, username):
-    sql = "INSERT INTO Activation_Key (Code, UserID) VALUES ('%s', '%s');"
+    sql = "INSERT INTO Activation_Key (Code, UserID) VALUES (%s, %s);"
     try:
         cursor.execute(sql, (str(code), str(username)))
         db.commit()
@@ -176,7 +176,7 @@ def put_new_account(username, fname, lname, email, hash):
 
 
 def remove_item_from_inventory(item_id):
-    sql = "DELETE FROM Inventory WHERE InventoryID = '%s';"
+    sql = "DELETE FROM Inventory WHERE InventoryID = %s;"
     try:
         cursor.execute(sql, (item_id))
         db.commit()
@@ -194,7 +194,7 @@ def get_group_image_by_id(group_id):
 
 
 def get_active_status(username):
-    sql = "SELECT IsActivated FROM User_Information WHERE UserID = '%s';"
+    sql = "SELECT IsActivated FROM User_Information WHERE UserID = %s;"
     cursor.execute(sql, username)
     return cursor.fetchone()
 
@@ -202,7 +202,7 @@ def get_active_status(username):
 def update_session_key_for_usr(userid, ses):
     date = datetime.today()
     date = date + timedelta(6 * 30)
-    sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`='%d', `AgeOffDate`='%s' WHERE `USERID`='%s';"
+    sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`=%d, `AgeOffDate`=%s WHERE `USERID`=%s;"
     try:
         cursor.execute(sql, (ses, date, username))
         kwlog.log("SQL excuted correctly")
@@ -213,7 +213,7 @@ def update_session_key_for_usr(userid, ses):
         return False
 
 def get_act_code(userid):
-    sql = "SELECT Code FROM Activation_Key WHERE UserID = '%s';"
+    sql = "SELECT Code FROM Activation_Key WHERE UserID = %s;"
     cursor.execute(sql, userid)
     data = cursor.fetchone()
     return str(data[0])
@@ -221,7 +221,7 @@ def get_act_code(userid):
 
 def update_activation_status_for_user(userid):
     kwlog.log("Update activation status")
-    sql = "UPDATE User_Information SET IsActivated = '1' WHERE UserID = '%s';"
+    sql = "UPDATE User_Information SET IsActivated = '1' WHERE UserID = %s;"
     try:
         cursor.execute(sql, userid)
         db.commit()
