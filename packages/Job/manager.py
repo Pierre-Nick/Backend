@@ -36,8 +36,8 @@ def add_job(thread):
 			job_queue.append(thread)
 			job_queue_blocked = False
 			break
-	
-	
+
+
 def remove_job(thread):
 	global job_queue
 	global job_queue_blocked
@@ -57,9 +57,9 @@ def monitor_jobs():
 		for thread in job_queue:
 			if not thread.is_alive():
 				remove_job(thread)
-			
+
 def service_request(data, connection):
-	result = None 
+	result = None
 	command = value_from_header(data, 'command')
 	if command == "Error":
 		print(str(data))
@@ -68,22 +68,21 @@ def service_request(data, connection):
 	if command == 'register':
 		username = value_from_header(data, 'username')
 		fname = value_from_header(data, 'fname')
-		lname = value_from_header(data, 'lname') 
+		lname = value_from_header(data, 'lname')
 		email = value_from_header(data, 'email')
 		password = value_from_header(data, 'password')
 		result = add_new_user(username, fname, lname, email, password.encode("utf-8"))
-	
+
 	if command == "activate":
 		code = value_from_header(data, "code")
-		userid = value_from_header(data, "userid")
-		result = update_account_activation_stats( userid, code)
-	
+		result = update_account_activation_stats( code)
+
 	if command == "login":
 		username = value_from_header(data, 'username')
 		password = value_from_header(data, 'password')
 		kwlog.log(str(username + ":"+ password))
 		result = login_to_account(username, password.encode("utf-8"))
-	
+
 	if command == "additem":
 		barcode = value_from_header(data, 'barcode')
 		sessionkey = value_from_header(data, 'sessionkey')
@@ -91,7 +90,7 @@ def service_request(data, connection):
 	if command == "getitems":
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = get_item_list(sessionkey)
-	
+
 	if command == "removeitem":
 		product_id = value_from_header(data, 'id')
 		sessionkey = value_from_header(data, 'sessionkey')

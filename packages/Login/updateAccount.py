@@ -44,11 +44,37 @@ def __update_act_status(userid):
     return MySQL.update_activation_status_for_user(userid)
 
 
-def update_account_activation_stats(userid, code):
+def __encrypt_password(password):
+    # Make password more secure
+    # Return str
+    kwlog.log("hashing hash")
+    h = hashlib.md5()
+    h.update(password)
+    h.update(b"EVERYONE_LOVES_KITCHENWIZARD!")
+    return h.hexdigest()
+
+
+def __get_userid_from_key(key):
+    # Gets userid from session key
+    # Return str
+    kwlog.log("Get userid from key")
+    if(__vaildate_sessionkey(key)):
+        return get_userid_from_session_key(key)
+    else:
+        return "BAD_KEY"
+
+
+def __get_userid_from_activation_code(code):
+    # Get userid linked with act code
+    # Return: str
+    return MySQL.get_userid_linked_to_act_code(code)
+
+
+def update_account_activation_stats(code):
     # Update activation status if code is correct
     # Return bool
-    # Primary
     kwlog.log("Update activation code, request")
+    userid = __get_userid_from_activation_code(code)
     if user_exist(userid) == "ID_FOUND":
         kwlog.log("Username exist")
         if not __check_act_status(userid):
@@ -69,3 +95,22 @@ def update_account_activation_stats(userid, code):
     else:
         kwlog.log("Userid not found")
         return False
+
+
+def update_account_information(fname, lname, email, password, sessionkey):
+    kwlog.log("request to update account information")
+    userid = __get_userid_from_key(sessionkey)
+    if len(fname) > 0:
+        if not MySQL.update_first_name_for_user(userid, fname):
+            return False
+    if len(lname) > 0:
+        if not MySQL.update_last_name_for_user(userid, lname):
+            return False
+    if len(email) > 0:
+        if not MySQL.update_email_for_user(userid, email):
+            return False
+    if len(password) > 0:
+        password = __encrypt_password(password)
+        if not MySQL.update_password_for_user(userid, password):
+            return False
+    return True

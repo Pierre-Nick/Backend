@@ -255,7 +255,60 @@ def update_inventory_item(uid, info):
         db.rollback()
         return False
 
+
 def get_groups():
     sql = "SELECT GroupID, GroupName FROM Grouping;"
     cursor.execute(sql)
     return cursor.fetchall()
+
+
+def get_userid_linked_to_act_code(code):
+    sql="SELECT UserID FROM Activation_Key WHERE Code = %s;"
+    cursor.execute(sql, code)
+    data = cursor.fetchone()
+    return str(data[0])
+
+
+def update_first_name_for_user(userid, fname):
+    sql = "UPDATE User_Information SET FirstName = %s WHERE UserID = %s;"
+    try:
+        cursor.execute(sql, (fname, userid))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False
+
+
+def update_last_name_for_user(userid, lname):
+    sql = "UPDATE User_Information SET LastName = %s WHERE UserID = %s;"
+    try:
+        cursor.execute(sql, (lname, userid))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False
+
+
+def update_email_for_user(userid, email):
+    sql = "UPDATE User_Information SET Email = %s WHERE UserID = %s;"
+    try:
+        cursor.execute(sql, (fname, email))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False
+
+
+def update_password_for_user(userid, password):
+    sql = "UPDATE Password SET PasswordHash = %s, UpdatedOn = %s WHERE User_id = %s;"
+    d = str(datetime.now())
+    try:
+        cursor.execute(sql, (password, d, userid))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False

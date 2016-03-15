@@ -68,7 +68,7 @@ def send_confirmation_email(fname, email, code, userid):
 
         Let us be the first to welcome you to the easiest way to track what is happening in your kitchen. Before we get started we need you to complete the activation process by clicking the link below.
 
-        CLICK HERE: http://52.36.126.156:8080?command=activate&code=%s&userid=%s&
+        CLICK HERE: http://52.36.126.156:8080?command=activate&code=%s&
 
         Thank You,
         Kitchen Wizard Support Team
