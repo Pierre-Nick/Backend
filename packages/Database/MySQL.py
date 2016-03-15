@@ -116,9 +116,9 @@ def put_group(name):
 
 def put_new_product(item):
     kwlog.log("Put new product")
-    sql = "INSERT INTO `KitchenWizard`.`ProductInformation` (`ProductID`, `ProductName`, `ProductDiscription`, `Manufacturer`, `Quantity`, `GroupID`) VALUES (%s, %s, %s, %s, %s, %s);"
+    sql = "INSERT INTO `KitchenWizard`.`ProductInformation` (`ProductID`, `ProductName`, `ProductDiscription`, `Manufacturer`, `Quantity`) VALUES (%s, %s, %s, %s, %s, %s);"
     try:
-        cursor.execute(sql,(str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4]), str(item[5])))
+        cursor.execute(sql,(str(item[0]), str(item[1]), str(item[2]), str(item[3]), str(item[4])))
         db.commit()
         return True
     except:
