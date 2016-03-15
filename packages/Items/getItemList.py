@@ -21,10 +21,10 @@ def __get_product_information(Product):
     return MySQL.get_product_by_barcode(Product)
 
 
-def __get_group_image(group_id):
+#def __get_group_image(group_id):
     # Get the image of a product for a group
     # return str
-    return MySQL.get_group_image_by_id(group_id)
+#    return MySQL.get_group_image_by_id(group_id)
 
 
 def __get_items_for_user(userid):
@@ -32,6 +32,8 @@ def __get_items_for_user(userid):
     # Return list
     return MySQL.get_inventory_list_for_user(userid)
 
+def __get_group_name(id):
+    return MySQL.get_group_name_from_group_id(id)
 
 def __create_response_list(items):
     # Create and return the list of products
@@ -41,9 +43,9 @@ def __create_response_list(items):
 
     for i in items:
         temp = __get_product_information(str(i[1]))
-        print(temp)
-        k=[i[0], temp[1], temp[2], temp[3], temp[4], __get_group_image(str(temp[5]))]
-        final.append(k)
+        k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], __get_group_name(temp[5]), temp[6], temp[7], temp[8]]
+    final.append(k)
+
 
     return final
 

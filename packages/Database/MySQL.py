@@ -205,7 +205,6 @@ def update_session_key_for_usr(userid, ses):
     sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`=%d, `AgeOffDate`=%s WHERE `USERID`=%s;"
     try:
         cursor.execute(sql, (ses, date, username))
-        kwlog.log("SQL excuted correctly")
         db.commit()
         return True
     except:
@@ -229,3 +228,9 @@ def update_activation_status_for_user(userid):
     except:
         db.rollback()
         return False
+
+
+def get_group_name_from_group_id(id):
+    sql = "SELECT GroupName FROM Grouping WHERE GroupID = %s;"
+    cursor.execute(sql, id)
+    return cursor.fetchone()
