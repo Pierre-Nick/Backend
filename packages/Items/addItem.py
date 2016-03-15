@@ -101,7 +101,6 @@ def __get_product_details_from_api(barcode):
     # Get details of product
     # Return list
     url = "http://api.foodessentials.com/labelarray?u=%s&sid=9fe4492b-492e-4336-86b8-7d278e02aa51&n=2&s=0&f=json&api_key=mvdrrzwt9327ttazxse6f95b" % (str(barcode))
-    url_pic = "https://api.upcitemdb.com/prod/trial/lookup?upc=%s" % (barcode)
     response = urlopen(url).read()
     if len(response) > 0:
         j_obj = json.loads(response.decode("utf-8"))
@@ -112,15 +111,7 @@ def __get_product_details_from_api(barcode):
             item.append(str(i['product_description']))
             item.append(str(i['manufacturer']))
             item.append(str(i['product_size']))
-            #item.append(str(__get_group_id(str(i['shelf']))))
-    else:
-        return "No_Information"
-
-    response = urlopen(url_pic).read()
-    if len(response) > 0:
-        j_obj = json.loads(response.decode("utf-8"))
-        print(j_obj['items'])
-        return item
+            return item
     else:
         return "No_Information"
 
