@@ -44,9 +44,15 @@ def __create_response_list(items):
     for i in items:
         temp = __get_product_information(str(i[1]))
         if __get_group_name(str(temp[5])):
-            k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], str(__get_group_name(str(temp[5]))[0]), temp[6], temp[7], temp[8]]
+            if i[2]:
+                k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], str(__get_group_name(str(temp[5]))[0]), temp[6], i[2], i[3]]
+            else:
+                k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], str(__get_group_name(str(temp[5]))[0]), temp[6], "NONE", i[3]]
         else:
-            k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], "NONE", temp[6], temp[7], temp[8]]
+            if i[2]:
+                k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], "NONE", temp[6], i[2], i[3]]
+            else:
+                k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], "NONE", temp[6], "NONE", i[3]]
         final.append(k)
 
     return final

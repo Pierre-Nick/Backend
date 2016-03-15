@@ -16,4 +16,4 @@ from packages.Database import MySQL
 def get_list_of_generic_items():
     # Get list of generic Items
     # Return: str
-    return str()
+    return MySQL.get_groups()

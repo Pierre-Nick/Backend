@@ -67,7 +67,7 @@ def get_group_by_name(name):
 
 def get_inventory_list_for_user(userid):
     kwlog.log("Get items for user from DB")
-    sql = "SELECT InventoryID, ProductID FROM Inventory WHERE UserID = %s;"
+    sql = "SELECT InventoryID, ProductID, ExperationDate, PercentUsed FROM Inventory WHERE UserID = %s;"
     cursor.execute(sql, userid)
     data = cursor.fetchall()
     return data
@@ -234,3 +234,28 @@ def get_group_name_from_group_id(gid):
     sql = "SELECT GroupName FROM Grouping WHERE GroupID = %s;"
     cursor.execute(sql, gid)
     return cursor.fetchone()
+
+
+def is_item_owned_by_user(userid, uid):
+    sql "SELECT InventoryID FROM Inventory WHERE UserID = %s AND InventoryID = %s;"
+    cursor.execute(sql, (userid, uid))
+    if cursor.fetchone():
+        return True
+    else:
+        return False
+
+
+def update_inventory_item(uid, info):
+    sql = "UPDATE Inventory SET ExperationDate = %s, PercentUsed = %s WHERE InventoryID = %s;"
+    try:
+        cursor.execute(sql, (info[0], info[1], uid))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False
+
+def get_groups():
+    sql = "SELECT GroupID, GroupName FROM Grouping;"
+    cursor.execute(sql)
+    return cursor.fetchall()
