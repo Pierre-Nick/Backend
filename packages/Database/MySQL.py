@@ -237,7 +237,7 @@ def get_group_name_from_group_id(gid):
 
 
 def is_item_owned_by_user(userid, uid):
-    sql "SELECT InventoryID FROM Inventory WHERE UserID = %s AND InventoryID = %s;"
+    sql = "SELECT InventoryID FROM Inventory WHERE UserID = %s AND InventoryID = %s;"
     cursor.execute(sql, (userid, uid))
     if cursor.fetchone():
         return True
