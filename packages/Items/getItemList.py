@@ -32,8 +32,8 @@ def __get_items_for_user(userid):
     # Return list
     return MySQL.get_inventory_list_for_user(userid)
 
-def __get_group_name(id):
-    return MySQL.get_group_name_from_group_id(id)
+def __get_group_name(gid):
+    return MySQL.get_group_name_from_group_id(gid)
 
 def __create_response_list(items):
     # Create and return the list of products
@@ -45,7 +45,6 @@ def __create_response_list(items):
         temp = __get_product_information(str(i[1]))
         k = [i[0], temp[0], temp[1], temp[2], temp[3], temp[4], __get_group_name(temp[5]), temp[6], temp[7], temp[8]]
     final.append(k)
-
 
     return final
 

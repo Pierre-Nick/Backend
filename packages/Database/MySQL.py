@@ -230,7 +230,7 @@ def update_activation_status_for_user(userid):
         return False
 
 
-def get_group_name_from_group_id(id):
+def get_group_name_from_group_id(gid):
     sql = "SELECT GroupName FROM Grouping WHERE GroupID = %s;"
-    cursor.execute(sql, id)
+    cursor.execute(sql, gid)
     return cursor.fetchone()
