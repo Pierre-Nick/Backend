@@ -88,7 +88,7 @@ def uppdate_session_key(username, ses):
 def check_active_status(username):
     # Checks if account has been activated
     # Return bool
-    data = MySQL.generate_session_key(username)
+    data = generate_session_key(username)
     if data[0] == 0:
         kwlog.log("Account not activated")
         return False
@@ -103,7 +103,7 @@ def generate_session_key(username):
     kwlog.log("Generating session key")
     ses = random.randint(100000000, 100000000000)
     kwlog.log("Updating key in DB")
-    uppdate_session_key(username, ses)
+    update_session_key(username, ses)
     ses = str(ses)
     kwlog.log("Session key returned")
     return ses
