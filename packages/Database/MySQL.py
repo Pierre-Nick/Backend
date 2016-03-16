@@ -312,3 +312,32 @@ def update_password_for_user(userid, password):
     except:
         db.rollback()
         return False
+
+def insert_recipe_for_user(userid, recipe):
+    d = str(datetime.now())
+    sql = "INSERT INTO Recipe (Name, Discription, Image, PrepTime, CookTime, UserID, DateAdded) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+    try:
+        cursor.execute(sql, (recipe[0], recipe[1], recipe[3], recipe[4], recipe[5], userid, d))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False
+
+
+def insert_items_to_recipe(rid, items):
+    for i in items:
+        sql = "INSERT INTO Recipe_Item (RecipeID, GroupID, Measurment) VALUES (%s, %s, %s);"
+        try:
+            cursor.execute(sql, (rid, items[0], items[1]))
+            db.commit()
+        except:
+            db.rollback()
+            return False
+    return True
+
+
+def get_recipe_id(name, userid):
+    sql= "SELECT RecipeID FROM Recipe WHERE UserID = %s AND Name = %s;"
+    cursor.execute(sql, (userid, name))
+    return cursor.fetchone()
