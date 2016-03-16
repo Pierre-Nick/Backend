@@ -60,14 +60,14 @@ def user_exist(usr):
 def get_hash_for_user(userid):
     # Get hash for user, return hash
     # Return str
-    return MySQL.get_hash_for_usr(userid)
+    return MySQL.get_password_hash_for_usr(userid)
 
 
 def check_password_hash(userid, hash):
     # Completes password check for user
     # Return bool
     kwlog.log(("Checking password for login request by %s" % userid))
-    dbhash = get_password_hash_for_user(userid)
+    dbhash = get_password_hash_for_usr(userid)
     dbhash = str(dbhash[0])
     hash = encrypt_password(hash)
     if dbhash == hash:
