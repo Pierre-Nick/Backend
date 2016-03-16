@@ -202,7 +202,7 @@ def get_active_status(username):
 def update_session_key_for_usr(userid, ses):
     date = datetime.today()
     date = date + timedelta(6 * 30)
-    sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`=%d, `AgeOffDate`=%s WHERE `USERID`=%s;"
+    sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`=%s, `AgeOffDate`=%s WHERE `USERID`=%s;"
     try:
         cursor.execute(sql, (ses, date, userid))
         db.commit()
