@@ -204,7 +204,7 @@ def update_session_key_for_usr(userid, ses):
     date = date + timedelta(6 * 30)
     sql = "UPDATE `KitchenWizard`.`Session_Key` SET `SessionKey`=%d, `AgeOffDate`=%s WHERE `USERID`=%s;"
     try:
-        cursor.execute(sql, (ses, date, username))
+        cursor.execute(sql, (ses, date, userid))
         db.commit()
         return True
     except:
