@@ -17,6 +17,6 @@ def replace_commas_with_semicolons(data):
 	for i in range(len(data)):
 		if data[i] == "\"":
 			in_string =  not in_string
-		elif data[i] == "," and in_string:
+		elif data[i] == "," and  not in_string:
 			data[i] = ";"
 	return data

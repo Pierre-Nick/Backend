@@ -90,7 +90,7 @@ def service_request(data, connection):
 	if command == "getitems":
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = get_item_list(sessionkey)
-		result = replace_commas_with_semicolons(data)
+		result = replace_commas_with_semicolons(result)
 
 	if command == "removeitem":
 		product_id = value_from_header(data, 'id')
