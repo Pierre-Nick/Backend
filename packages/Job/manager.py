@@ -2,7 +2,7 @@ import threading
 import re
 import urllib
 from packages.Log import kwlog
-from packages.Job.util import value_from_header
+from packages.Job.util import value_from_header, replace_commas_with_semicolons
 from packages.Login.createAccount import add_new_user
 from packages.Login.updateAccount import update_account_activation_stats
 from packages.Login.checkLogin import login_to_account
@@ -90,6 +90,7 @@ def service_request(data, connection):
 	if command == "getitems":
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = get_item_list(sessionkey)
+		result = replace_commas_with_semicolons(data)
 
 	if command == "removeitem":
 		product_id = value_from_header(data, 'id')
