@@ -81,7 +81,7 @@ def get_password_hash_for_usr(userid):
 
 
 def is_item_in_inventory(item_id, userid):
-    sql = "SELECT * FROM Inventory WHERE UserID = '%s' AND InventoryID = %s;"
+    sql = "SELECT * FROM Inventory WHERE UserID = %s AND InventoryID = %s;"
     cursor.execute(sql, (str(userid), str(item_id)))
     data = cursor.fetchone()
     return data
@@ -131,7 +131,7 @@ def get_single_inventory(userid, d):
     cursor.execute(sql, (d, userid))
     return cursor.fetchone()
 
-    
+
 def put_item_in_inventory(barcode, userid):
     kwlog.log("Put item in inventory")
     sql = "INSERT INTO `KitchenWizard`.`Inventory` (`UserID`, `ProductID`, `DateAdded`) VALUES (%s, %s, %s);"
@@ -144,6 +144,7 @@ def put_item_in_inventory(barcode, userid):
     except:
         db.rollback()
         kwlog.log("Error adding item to inventory")
+        raise
         return False
 
 
