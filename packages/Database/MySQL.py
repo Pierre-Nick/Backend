@@ -209,6 +209,7 @@ def update_session_key_for_usr(userid, ses):
         return True
     except:
         db.rollback()
+        raise
         return False
 
 def get_act_code(userid):
