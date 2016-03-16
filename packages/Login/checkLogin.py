@@ -60,7 +60,7 @@ def user_exist(usr):
 def get_hash_for_user(userid):
     # Get hash for user, return hash
     # Return str
-    return MySQL.get_hash_for_user(userid)
+    return MySQL.get_hash_for_usr(userid)
 
 
 def check_password_hash(userid, hash):
