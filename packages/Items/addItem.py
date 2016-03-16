@@ -133,6 +133,8 @@ def __add_item_to_inventory(barcode, userid):
             return "No_Information_Available"
         if not __add_product_to_DB(item):
             return False
+        else:
+            return [put_item_in_inventory(barcode, userid), -1]
 
     # Add item to inventory
     return put_item_in_inventory(barcode, userid)
