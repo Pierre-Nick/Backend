@@ -147,7 +147,7 @@ def __clean_barcode(barcode):
     else:
         return barcode
 
-
+def __get_item_information(userid, )
 def add_new_item(barcode, session):
     # Add new item to inventory of user
     # Return str
@@ -163,7 +163,7 @@ def add_new_item(barcode, session):
             if ret == "No_Information_Available":
                 return "ADD_FAILED_PRODUCT_NOT_IN_API"
             kwlog.log("New item added")
-            return "ITEM_ADDED"
+            return str(ret)
         else:
             kwlog.log("Add item failed")
             return "ADD_FAILED"

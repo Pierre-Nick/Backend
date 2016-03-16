@@ -126,14 +126,21 @@ def put_new_product(item):
         kwlog.log("Error adding new product")
         return False
 
+def get_single_inventory(userid, d):
+    sql = "SELECT * FROM Inventory WHERE DateAdded = %s AND UserID = %s;"
+    cursor.execute(sql, (d, userid))
+    return cursor.fetchone()
 
+    
 def put_item_in_inventory(barcode, userid):
     kwlog.log("Put item in inventory")
     sql = "INSERT INTO `KitchenWizard`.`Inventory` (`UserID`, `ProductID`, `DateAdded`) VALUES (%s, %s, %s);"
+    d = str(datetime.now())
     try:
-        cursor.execute(sql, (str(userid), str(barcode), str(datetime.now())))
+        cursor.execute(sql, (str(userid), str(barcode), d))
         db.commit()
-        return True
+        return get_single_inventory(userid, d)
+        #return True
     except:
         db.rollback()
         kwlog.log("Error adding item to inventory")
