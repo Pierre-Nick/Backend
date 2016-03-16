@@ -147,7 +147,7 @@ def __clean_barcode(barcode):
     else:
         return barcode
 
-def __get_item_information(userid, )
+
 def add_new_item(barcode, session):
     # Add new item to inventory of user
     # Return str
