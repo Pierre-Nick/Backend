@@ -14,8 +14,20 @@
 import pymysql as MySQLdb
 from datetime import *
 from packages.Log import kwlog
+import hashlib
 db = None
 cursor = None
+
+
+def encrypt_password(password):
+    # Make password more secure
+    # Return str
+    kwlog.log("hashing hash")
+    h = hashlib.md5()
+    h.update(password)
+    h.update(b"EVERYONE_LOVES_KITCHENWIZARD!")
+    return h.hexdigest()
+
 
 def init():
     global db
