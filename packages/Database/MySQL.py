@@ -362,3 +362,25 @@ def get_recipe_id(name, userid):
     sql= "SELECT RecipeID FROM Recipe WHERE UserID = %s AND Name = %s;"
     cursor.execute(sql, (userid, name))
     return cursor.fetchone()
+
+
+def get_group_by_barcode(barcode):
+    sql = "SELECT GroupID FROM ProductInformation WHERE ProductID = %s;"
+    cursor.execute(sql, barcode)
+    data = cursor.fetchone()
+
+    if data:
+        return str(data[0])
+    else:
+        return "-1"
+
+
+def update_group_of_item(groupid, barcode):
+    sql = "UPDATE ProductInformation SET GroupID = %s WHERE ProductID = %s;"
+    try:
+        cursor.execute(sql, (groupid, barcode))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        return False
