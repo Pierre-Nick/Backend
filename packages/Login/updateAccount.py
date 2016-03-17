@@ -31,7 +31,7 @@ def __check_code(userid, code):
 def __check_act_status(userid):
     # Check if account is activated
     # Return bool
-    data = get_active_status(userid)
+    data = MySQL.get_active_status(userid)
     if str(data[0]) == '1':
         return True
     else:
