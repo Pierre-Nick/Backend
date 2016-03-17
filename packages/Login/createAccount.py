@@ -72,7 +72,7 @@ def send_confirmation_email(fname, email, code, userid):
 
         Thank You,
         Kitchen Wizard Support Team
-        """ % (fname, code, userid)
+        """ % (fname, code)
     msg.attach(MIMEText(body, 'plain'))
     kwlog.log("Sending message...")
     try:
