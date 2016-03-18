@@ -10,6 +10,8 @@ from packages.Listen.reply import send
 from packages.Items.addItem import add_new_item
 from packages.Items.getItemList import get_item_list
 from packages.Items.removeItem import remove_item
+from pacakages.Recipe.removeRecipe import remove_recipe
+from pacakages.Recipe.getRecipeList import get_list_of_recipes
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -96,6 +98,15 @@ def service_request(data, connection):
 		product_id = value_from_header(data, 'id')
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = remove_item(product_id, sessionkey)
+
+	if command == "getrecipes":
+                sessionkey = value_from_header(data, 'sessionkey')
+                result = get_list_of_recipe(sessionkey)
+
+	if command == "removerecipe":
+		recipe_id = value_from_header(data, 'recipeid')
+		sessionkey = value_from_header(data, 'sessionkey')
+                result = remove_recipe(recipe_id, sessionkey)
 
 	if command == "test":
 		result = "success"
