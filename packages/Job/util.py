@@ -20,3 +20,17 @@ def replace_commas_with_semicolons(data):
 		elif data[i] == "," and  not in_string:
 			data = data[:i] + ';' + data[i+1:]
 	return data
+
+def replace_commas_with_semicolons_for_groups(data):
+	data = str(data)
+
+	in_parenth = False
+	for i in range(len(data)):
+		if data[i] == "(":
+			in_parenth =  True
+		elif data[i] == ")":
+			in_parenth = False
+		elif data[i] == "," and  not in_parenth:
+			data = data[:i] + ';' + data[i+1:]
+		return data
+

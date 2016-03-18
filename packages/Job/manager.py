@@ -2,7 +2,7 @@ import threading
 import re
 import urllib
 from packages.Log import kwlog
-from packages.Job.util import value_from_header, replace_commas_with_semicolons
+from packages.Job.util import value_from_header, replace_commas_with_semicolons, replace_commas_with_semicolons_for_groups
 from packages.Login.createAccount import add_new_user
 from packages.Login.updateAccount import update_account_activation_stats
 from packages.Login.checkLogin import login_to_account
@@ -109,7 +109,7 @@ def service_request(data, connection):
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = remove_recipe(recipe_id, sessionkey)
 	if command == "getgrouplist":
-		result = get_list_of_generic_items()
+		result = replace_commas_with_semicolons_for_groups(get_list_of_generic_items())
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))
