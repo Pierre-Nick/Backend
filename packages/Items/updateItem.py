@@ -1,6 +1,7 @@
 
 from packages.Log import kwlog
 from packages.Database import MySQL
+from packages.Items.addItem import __get_userid_from_key
 
 def __get_userid_from_key(key):
     # Gets userid from session key
