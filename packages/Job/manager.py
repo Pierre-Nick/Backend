@@ -10,6 +10,7 @@ from packages.Listen.reply import send
 from packages.Items.addItem import add_new_item
 from packages.Items.getItemList import get_item_list
 from packages.Items.removeItem import remove_item
+from packages.Items.updateItem import update_inventory_item
 from packages.Recipes.removeRecipe import remove_recipe
 from packages.Recipes.getRecipeList import get_list_of_recipes
 from packages.Groups.getList import get_list_of_generic_items
@@ -110,6 +111,19 @@ def service_request(data, connection):
 		result = remove_recipe(recipe_id, sessionkey)
 	if command == "getgrouplist":
 		result = replace_commas_with_semicolons_for_groups(get_list_of_generic_items())
+
+	if command == "updateitem":
+		sessionkey = value_from_header(data, 'sessionkey')
+		expiration = value_from_header(data, 'expiration')
+		if expiration == "Error":
+			expiration = ""
+		percentused = value_from_header(data, 'percentused')
+		if percentused == "Error":
+			percentused = ""
+		product_id = value_from_header(data, 'id')
+		addit_arr = [expiration, percentused]
+		result = update_inventory_item(addit_arr, product_id, sessionkey)
+
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))
