@@ -24,13 +24,13 @@ def replace_commas_with_semicolons(data):
 def replace_commas_with_semicolons_for_groups(data):
 	data = str(data)
 
-	in_parenth = False
+	in_parenth = 0
 	for i in range(len(data)):
 		if data[i] == "(":
-			in_parenth =  True
-		elif data[i] == ")":
-			in_parenth = False
-		elif data[i] == "," and  not in_parenth:
+			in_parenth +=1
+		if data[i] == ")":
+			in_parenth -=1
+		if data[i] == "," and  1 == in_parenth:
 			data = data[:i] + ';' + data[i+1:]
 		return data
 
