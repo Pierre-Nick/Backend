@@ -139,7 +139,7 @@ def __add_item_to_inventory(barcode, userid):
     return [put_item_in_inventory(barcode, userid), get_group_by_barcode(barcode)]
 
 
-def __add_item_to_inventory(barcode, userid, item):
+def __add_item_to_inventory_man(barcode, userid, item):
     # Add item to inventory
     # Return bool
     if not __product_is_in_DB(barcode):
@@ -202,7 +202,7 @@ def add_new_item_man(barcode, name, dis, man, amount, gid, exper_date, session_k
             return "INVAILD_FORMAT"
 
         item = [barcode, name, dis, man, amount]
-        ret = __add_item_to_inventory(barcode, userid, item)
+        ret = __add_item_to_inventory_man(barcode, userid, item)
         if ret:
             if len(exper_date) > 0:
                 update.update_inventory_item([exper_date, "0%"], str(ret[0]), session_key)
