@@ -10,8 +10,8 @@ from packages.Listen.reply import send
 from packages.Items.addItem import add_new_item
 from packages.Items.getItemList import get_item_list
 from packages.Items.removeItem import remove_item
-from pacakages.Recipe.removeRecipe import remove_recipe
-from pacakages.Recipe.getRecipeList import get_list_of_recipes
+from packages.Recipes.removeRecipe import remove_recipe
+from packages.Recipes.getRecipeList import get_list_of_recipes
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
