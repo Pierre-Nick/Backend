@@ -88,7 +88,7 @@ def service_request(data, connection):
 	if command == "additem":
 		barcode = value_from_header(data, 'barcode')
 		sessionkey = value_from_header(data, 'sessionkey')
-		result = add_new_item(barcode, sessionkey)
+		result = replace_commas_with_semicolons(add_new_item(barcode, sessionkey))
 	if command == "getitems":
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = get_item_list(sessionkey)
