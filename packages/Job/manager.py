@@ -106,7 +106,7 @@ def service_request(data, connection):
 	if command == "removerecipe":
 		recipe_id = value_from_header(data, 'recipeid')
 		sessionkey = value_from_header(data, 'sessionkey')
-        	result = remove_recipe(recipe_id, sessionkey)
+		result = remove_recipe(recipe_id, sessionkey)
 
 	if command == "test":
 		result = "success"
