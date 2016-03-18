@@ -176,7 +176,7 @@ def add_new_item(barcode, session):
                 return ["ADD_FAILED_PRODUCT_NOT_IN_API", str(barcode)]
             kwlog.log("New item added")
             ret[0] = list(ret[0])
-            ret = str(ret[0][5])
+            ret[0][5] = str(ret[0][5])
             return str(ret)
         else:
             kwlog.log("Add item failed")
@@ -213,7 +213,8 @@ def add_new_item_man(barcode, name, dis, man, amount, gid, exper_date, session_k
                 update.update_group_of_item(gid, barcode, session_key)
 
             kwlog.log("New item added")
-            ret[5] = str(ret[5])
+            ret[0] = list(ret[0])
+            ret[0][5] = str(ret[0][5])
             return str(ret)
         else:
             kwlog.log("Add item failed")
