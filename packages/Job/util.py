@@ -35,5 +35,5 @@ def replace_commas_with_semicolons_for_groups(data):
 		if data[i] == "," and  (not in_parenth):
 			data = data[:i] + ';' + data[i+1:]
 			print("change")
-		return data
+	return data
 
