@@ -17,7 +17,7 @@ def log( message):
 	if message is None:
 		return
 	message = str(datetime.datetime.now()) +": "+ message + "\n"
-
+	global lock
 	while True:
 		if lock != 0:
 			continue
