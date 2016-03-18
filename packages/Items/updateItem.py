@@ -1,16 +1,52 @@
 
 from packages.Log import kwlog
 from packages.Database import MySQL
-from packages.Items.addItem import __get_userid_from_key
+
+def __check_vaild_date(key):
+    # Checks if key vaild date has passed
+    # return bool
+    d = str(MySQL.get_session_key_expire_data(key))
+    d1 = datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
+    d2 = datetime.now()
+    return d1 > d2
+
+def __session_key_exist(key):
+    # Checks Session Key exist
+    # Return bool
+    if __check_vaild_date(key):
+        if MySQL.get_userid_from_session_key(key):
+            return True
+        else:
+            return False
+    else:
+        kwlog.log("Key has expired")
+        return False
+
+
+def __vaildate_sessionkey(key):
+    # Check if session key is vaild
+    # Return bool
+    if __session_key_exist(key):
+        if __check_vaild_date(key):
+            kwlog.log("Key is vaild")
+            return True
+        else:
+            kwlog.log("Invaild key")
+            return False
+    else:
+        kwlog.log("Invaild key")
+        return False
+
 
 def __get_userid_from_key(key):
     # Gets userid from session key
     # Return str
     kwlog.log("Get userid from key")
     if(__vaildate_sessionkey(key)):
-        return get_userid_from_session_key(key)
+        return MySQL.get_userid_from_session_key(key)
     else:
         return "BAD_KEY"
+
 
 
 def update_inventory_item(info, uid, session_key):
