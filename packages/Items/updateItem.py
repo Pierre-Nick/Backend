@@ -1,7 +1,16 @@
 
 from packages.Log import kwlog
 from packages.Database import MySQL
-from packages.Items.addItem import __get_userid_from_key
+
+def __get_userid_from_key(key):
+    # Gets userid from session key
+    # Return str
+    kwlog.log("Get userid from key")
+    if(__vaildate_sessionkey(key)):
+        return get_userid_from_session_key(key)
+    else:
+        return "BAD_KEY"
+
 
 def update_inventory_item(info, uid, session_key):
     # Update inventory information for user
@@ -16,6 +25,7 @@ def update_inventory_item(info, uid, session_key):
             return MySQL.update_inventory_item(uid, info)
         else:
             "INVAILD_INVENTORY_ID"
+
 
 def update_group_of_item(groupid, barcode, session_key):
     userid = __get_userid_from_key(session_key)
