@@ -23,7 +23,7 @@ def replace_commas_with_semicolons(data):
 
 def replace_commas_with_semicolons_for_groups(data):
 	data = str(data)
-
+	print(data)
 	in_parenth = 0
 	for i in range(len(data)):
 		if data[i] == "(":
