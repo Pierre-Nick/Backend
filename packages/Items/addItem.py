@@ -175,8 +175,8 @@ def add_new_item(barcode, session):
             if ret == "No_Information_Available":
                 return ["ADD_FAILED_PRODUCT_NOT_IN_API", str(barcode)]
             kwlog.log("New item added")
-            ret = list(ret)
-            ret = str(ret[5])
+            ret[0] = list(ret[0])
+            ret = str(ret[0][5])
             return str(ret)
         else:
             kwlog.log("Add item failed")
