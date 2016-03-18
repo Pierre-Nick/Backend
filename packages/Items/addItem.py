@@ -14,6 +14,7 @@ from urllib.request import urlopen
 import json
 from packages.Log import kwlog
 from packages.Database.MySQL import *
+from packages.Items import updateItem as update
 
 
 def __check_vaild_date(key):
@@ -135,7 +136,18 @@ def __add_item_to_inventory(barcode, userid):
             return False
 
     # Add item to inventory
-    return [put_item_in_inventory(barcode, userid), MySQL.get_group_by_barcode(barcode)]
+    return [put_item_in_inventory(barcode, userid), get_group_by_barcode(barcode)]
+
+
+def __add_item_to_inventory(barcode, userid, item):
+    # Add item to inventory
+    # Return bool
+    if not __product_is_in_DB(barcode):
+        if not __add_product_to_DB(item):
+            return False
+
+    # Add item to inventory
+    return [put_item_in_inventory(barcode, userid), get_group_by_barcode(barcode)]
 
 
 def __clean_barcode(barcode):
@@ -161,7 +173,43 @@ def add_new_item(barcode, session):
         ret = __add_item_to_inventory(barcode, userid)
         if ret:
             if ret == "No_Information_Available":
-                return "ADD_FAILED_PRODUCT_NOT_IN_API"
+                return ["ADD_FAILED_PRODUCT_NOT_IN_API", str(barcode)]
+            kwlog.log("New item added")
+            return str(ret)
+        else:
+            kwlog.log("Add item failed")
+            return "ADD_FAILED"
+
+def add_new_item(barcode, name, dis, man, amount, gid, exper_date, session_key):
+    # Add new item to inventory of user
+    # Return str
+    kwlog.log("Adding new item")
+    userid=__get_userid_from_key(session)
+    barcode = __clean_barcode(barcode)
+    if userid == 'BAD_KEY':
+        kwlog.log("Add item failed")
+        return "ADD_FAILED"
+    else:
+        if not len(barcode) > 0:
+            return "INVAILD_FORMAT"
+        if not len(name) > 0:
+            return "INVAILD_FORMAT"
+        if not len(dis) > 0:
+            return "INVAILD_FORMAT"
+        if not len(man) > 0:
+            return "INVAILD_FORMAT"
+        if not len(amount) > 0:
+            return "INVAILD_FORMAT"
+
+        item = [barcode, name, dis, man, amount]
+        ret = __add_item_to_inventory(barcode, userid, item)
+        if ret:
+            if len(exper_date) > 0:
+                update.update_inventory_item([exper_date, "0%"], str(ret[0]), session_key)
+
+            if len(gid) > 0:
+                update.update_group_of_item(gid, barcode, session_key)
+
             kwlog.log("New item added")
             return str(ret)
         else:
