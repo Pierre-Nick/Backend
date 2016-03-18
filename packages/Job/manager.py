@@ -12,6 +12,7 @@ from packages.Items.getItemList import get_item_list
 from packages.Items.removeItem import remove_item
 from packages.Recipes.removeRecipe import remove_recipe
 from packages.Recipes.getRecipeList import get_list_of_recipes
+from packages.Groups.getList import get_list_of_generic_items
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -107,7 +108,8 @@ def service_request(data, connection):
 		recipe_id = value_from_header(data, 'recipeid')
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = remove_recipe(recipe_id, sessionkey)
-
+	if command == "getgrouplist":
+		result = get_list_of_generic_items()
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))
