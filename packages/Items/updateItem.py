@@ -23,7 +23,7 @@ def update_group_of_item(groupid, barcode, session_key):
         kwlog.log("Bad Session Key")
         return "BAD_KEY"
     else:
-        if not MySQL.get_group_by_barcode(barcode) = "-1":
+        if not MySQL.get_group_by_barcode(barcode) == "-1":
             kwlog.log("Group Already Assigned")
             return "GROUP_ALREADY_ASSIGNED"
         else:
