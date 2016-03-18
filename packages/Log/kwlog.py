@@ -22,11 +22,11 @@ def log( message):
 		if lock != 0:
 			continue
 		else:
-			log = 1
+			lock = 1
 			if debug:
 				print(message)
 			loghandle.write(message)
-			log = 0
+			lock = 0
 			break
 
 
