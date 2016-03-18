@@ -1,6 +1,7 @@
 
 from packages.Log import kwlog
 from packages.Database import MySQL
+from datetime import *
 
 def __check_vaild_date(key):
     # Checks if key vaild date has passed
@@ -53,6 +54,7 @@ def update_inventory_item(info, uid, session_key):
     # Update inventory information for user
     # Return: string
     # info[] = [ExperationDate, PercentUsed]
+    print(session_key)
     userid = __get_userid_from_key(session_key)
     if userid == 'BAD_KEY':
         kwlog.log("Bad Session Key")
