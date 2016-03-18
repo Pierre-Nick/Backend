@@ -180,7 +180,7 @@ def add_new_item(barcode, session):
             kwlog.log("Add item failed")
             return "ADD_FAILED"
 
-def add_new_item(barcode, name, dis, man, amount, gid, exper_date, session_key):
+def add_new_item_man(barcode, name, dis, man, amount, gid, exper_date, session_key):
     # Add new item to inventory of user
     # Return str
     kwlog.log("Adding new item")
