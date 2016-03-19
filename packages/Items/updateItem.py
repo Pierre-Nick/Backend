@@ -54,7 +54,7 @@ def update_inventory_item(info, uid, session_key):
     # Update inventory information for user
     # Return: string
     # info[] = [ExperationDate, PercentUsed]
-    print(session_key)
+    print("Session Key: %s" % session_key)
     userid = __get_userid_from_key(session_key)
     if userid == 'BAD_KEY':
         kwlog.log("Bad Session Key")
