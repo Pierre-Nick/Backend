@@ -10,7 +10,7 @@ from packages.Listen.reply import send
 from packages.Items.addItem import add_new_item
 from packages.Items.getItemList import get_item_list
 from packages.Items.removeItem import remove_item
-from packages.Items.updateItem import update_inventory_item
+from packages.Items.updateItem import update_inventory_item, update_group_of_item
 from packages.Recipes.removeRecipe import remove_recipe
 from packages.Recipes.getRecipeList import get_list_of_recipes
 from packages.Groups.getList import get_list_of_generic_items
@@ -123,7 +123,11 @@ def service_request(data, connection):
 		product_id = value_from_header(data, 'id')
 		addit_arr = [expiration, percentused]
 		result = update_inventory_item(addit_arr, product_id, sessionkey)
-
+	if command == "updategroup":
+		groupid = value_from_header(data, 'groupid')
+		barcode = value_from_header(data, 'barcode')
+		sessionkey = value_from_header(data, 'sessionkey')
+		update_group_of_item(group_id, barcode, sessionkey)
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))
