@@ -50,8 +50,8 @@ def get_generic_item_list():
 
 def get_session_key_expire_data(key):
     kwlog.log("Get exp date for key")
-    sql = "SELECT AgeOffDate FROM Session_Key WHERE SessionKey = %s" % (str(key))
-    cursor.execute(sql)
+    sql = "SELECT AgeOffDate FROM Session_Key WHERE SessionKey = %s"
+    cursor.execute(sql, str(key))
     data = cursor.fetchone()
     return str(data[0])
 
@@ -338,7 +338,7 @@ def is_recipe_in_db(recipeid, userid):
     sql = "SELECT * FROM recipe WHERE UserID = %s AND RecipeID = %s;"
     cursor.execute(sql, (str(userid), str(recipe_id)))
     data = cursor.fetchone()
-    return data 
+    return data
 
 def get_recipes_for_user(userid):
     sql = "select * from Recipe where UserID = %s"
