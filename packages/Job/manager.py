@@ -127,7 +127,7 @@ def service_request(data, connection):
 		groupid = value_from_header(data, 'groupid')
 		barcode = value_from_header(data, 'barcode')
 		sessionkey = value_from_header(data, 'sessionkey')
-		update_group_of_item(group_id, barcode, sessionkey)
+		result = update_group_of_item(groupid, barcode, sessionkey)
 	if command == "test":
 		result = "success"
 	kwlog.log("Result: " + str(result))

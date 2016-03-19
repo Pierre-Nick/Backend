@@ -28,12 +28,9 @@ def replace_commas_with_semicolons_for_groups(data):
 	for i in range(len(data)):
 		if data[i] == "(":
 			in_parenth = True
-			print("True")
 		if data[i] == ")":
 			in_parenth = False
-			print("False")
 		if data[i] == "," and  (not in_parenth):
 			data = data[:i] + ';' + data[i+1:]
-			print("change")
 	return data
 
