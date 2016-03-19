@@ -51,6 +51,7 @@ def get_generic_item_list():
 def get_session_key_expire_data(key):
     kwlog.log("Get exp date for key")
     sql = "SELECT AgeOffDate FROM Session_Key WHERE SessionKey = %s;"
+    print(sql)
     cursor.execute(sql, str(key))
     data = cursor.fetchone()
     return str(data[0])
