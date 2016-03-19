@@ -54,7 +54,6 @@ def update_inventory_item(info, uid, session_key):
     # Update inventory information for user
     # Return: string
     # info[] = [ExperationDate, PercentUsed]
-    print("Session Key: %s" % session_key)
     userid = __get_userid_from_key(session_key)
     if userid == 'BAD_KEY':
         kwlog.log("Bad Session Key")
@@ -72,7 +71,7 @@ def update_group_of_item(groupid, barcode, session_key):
         kwlog.log("Bad Session Key")
         return "BAD_KEY"
     else:
-        if not MySQL.get_group_by_barcode(barcode) == "-1":
+        if not MySQL.get_group_by_barcode(barcode):
             kwlog.log("Group Already Assigned")
             return "GROUP_ALREADY_ASSIGNED"
         else:
