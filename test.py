@@ -1,7 +1,5 @@
-from urllib.request import urlopen
+from packages.Job.util import replace_commas_with_semicolons
 
-url = "http://127.0.0.1:8080?command=register&"
-while True:
-    url = "http://127.0.0.1:8080?command=additem&barcode=%s&sessionkey=2178071641&" % (str(input("Barcode: ")))
-    response = urlopen(url).read()
-    print(response)
+data = "[85; \'051000012616\'; \"CAMPBELL\'S CREAM OF MUSHROOiM SOUP\", "
+data = replace_commas_with_semicolons(data)
+print(data)
