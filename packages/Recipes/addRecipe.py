@@ -23,8 +23,16 @@ def __add_items_to_recipe(items, rid):
     # Add items for recipe
     # Return: bool
     return MySQL.insert_items_to_recipe(rid, items)
+def __check_args(recipe):
+    for i in recipe:
+        if i == "Error":
+            return False
+    for i in recipe[2]:
+        for j in i:
+            if j == "Error":
+                return False
 
-
+    return True
 def add_recipe(session_key, recipe):
     # Adds a recipe for a user
     # Return string
@@ -37,6 +45,8 @@ def add_recipe(session_key, recipe):
         return "BAD_KEY"
     else:
         if (len(recipe[0]) > 0) and (len(recipe[1]) > 0) and (len(recipe[2]) > 0) and (len(recipe[4]) > 0) and (len(recipe[5]) > 0):
+            if not (__check_args(recipe)):
+                return "INVAILD_FORMAT"
             if __create_recipe(recipe, userid):
                 rid = MySQL.get_recipe_id(str(recipe[0]), userid)
                 if __add_items_to_recipe(recipe[2], rid):
