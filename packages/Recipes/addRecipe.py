@@ -52,7 +52,7 @@ def add_recipe(session_key, recipe):
                 if __add_items_to_recipe(recipe[2], rid):
                     return "COMPLETE"
                 else:
-                    "FAILED_TO_ADD_ITEMS_TO_RECIPE"
+                    return "FAILED_TO_ADD_ITEMS_TO_RECIPE"
             else:
                 return "FAILED_TO_ADD_RECIPE"
         else:
