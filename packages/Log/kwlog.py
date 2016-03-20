@@ -1,6 +1,7 @@
 import datetime
 
 lock = 0
+global debug
 debug = False
 default_logfile = "/tmp/kitchenwizard.log"
 logfile = None
@@ -26,6 +27,7 @@ def log( message):
 			if debug:
 				print(message)
 			loghandle.write(message)
+			loghandle.flush()
 			lock = 0
 			break
 
