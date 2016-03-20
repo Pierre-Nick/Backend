@@ -105,7 +105,7 @@ def service_request(data, connection):
 
 	if command == "getrecipes":
                 sessionkey = value_from_header(data, 'sessionkey')
-                result = get_list_of_recipes(sessionkey)
+                result = replace_commas_with_semicolons(get_list_of_recipes(sessionkey))
 
 	if command == "removerecipe":
 		recipe_id = value_from_header(data, 'recipeid')

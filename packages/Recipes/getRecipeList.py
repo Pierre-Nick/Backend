@@ -8,7 +8,14 @@ def get_list_of_recipes(session_key):
         if userid == "BAD_KEY":
             kwlog.log("bad key")
             raise
-        return get_recipes_for_user(userid)
+        recipes = get_recipes_for_user(userid)
+        recipe_arr = []
+        for recipe in recipes:
+                recipe = list(recipe)
+                recipe[7] = str(recipe[7])
+                recipe_arr.append(recipe)
+        return recipe_arr
+		
     except:
         if kwlog.debug:
             raise
