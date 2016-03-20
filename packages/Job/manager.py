@@ -162,6 +162,10 @@ def service_request(data, connection):
 		recipe = [name,des,ingredients,image,int(preptime),int(cooktime)]
 		kwlog.log(str(recipe))
 		result = add_recipe(session_key, recipe)
+	if command == "getrecipes":
+		session_key = value_from_header(data, 'sessionkey')
+		result = get_list_of_recipes(session_key)
+		
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
 	kwlog.log("Result sent")
