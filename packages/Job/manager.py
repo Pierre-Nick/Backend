@@ -8,6 +8,7 @@ from packages.Login.updateAccount import update_account_activation_stats
 from packages.Login.checkLogin import login_to_account
 from packages.Listen.reply import send
 from packages.Items.addItem import add_new_item
+from packages.Items.addItem import add_new_item_man
 from packages.Items.getItemList import get_item_list
 from packages.Items.removeItem import remove_item
 from packages.Items.updateItem import update_inventory_item, update_group_of_item
@@ -130,6 +131,20 @@ def service_request(data, connection):
 		result = update_group_of_item(groupid, barcode, sessionkey)
 	if command == "test":
 		result = "success"
+	if command == "manualadd":
+		barcode = value_from_header(data, 'barcode')
+		name = value_from_header(data, 'name')
+		dis = value_from_header(data, 'discription')
+		man = value_from_header(data, 'manufacturer')
+		amount = value_from_header(data, 'amount')
+		gid = value_from_header(data, 'group')
+		exper_date = value_from_header(data, 'experation')
+		session_key = value_from_header(data, 'sessionkey')
+		if gid == "na":
+			gid = ""
+		if exper_date == "na":
+			exper_date = ""
+		result = add_new_item_man(barcode, name, dis, man, amount, gid, exper_date, session_key)
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
 	kwlog.log("Result sent")
