@@ -186,7 +186,7 @@ def add_new_item_man(barcode, name, dis, man, amount, gid, exper_date, session_k
     # Add new item to inventory of user
     # Return str
     kwlog.log("Adding new item")
-    userid=__get_userid_from_key(session)
+    userid=__get_userid_from_key(session_key)
     barcode = __clean_barcode(barcode)
     if userid == 'BAD_KEY':
         kwlog.log("Add item failed")
