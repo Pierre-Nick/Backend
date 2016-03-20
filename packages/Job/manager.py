@@ -155,8 +155,9 @@ def service_request(data, connection):
 		ingredients = value_from_header(data, 'ingredients')
 		image = ''
 		ingredients = parse_ingredients(ingredients)
-		data = [name,des,ingredients,image,preptime,cooktime]
-		result = add_recipe(session_key, data)
+		recipe = [name,des,ingredients,image,preptime,cooktime]
+		kwlog.log(str(recipe))
+		result = add_recipe(session_key, recipe)
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
 	kwlog.log("Result sent")
