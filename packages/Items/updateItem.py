@@ -49,12 +49,24 @@ def __get_userid_from_key(key):
         return "BAD_KEY"
 
 
+def __clean_barcode(barcode):
+    # Clean '+' out of some barcode
+    # Return: str
+    kwlog.log("Clean barcode")
+    if '+' in barcode:
+        return barcode.strip('+')
+    else:
+        return barcode
+
 
 def update_inventory_item(info, uid, session_key):
     # Update inventory information for user
     # Return: string
     # info[] = [ExperationDate, PercentUsed]
     userid = __get_userid_from_key(session_key)
+    for i in info:
+        i = __clean_barcode(str(i))
+
     if userid == 'BAD_KEY':
         kwlog.log("Bad Session Key")
         return "BAD_KEY"
@@ -67,13 +79,10 @@ def update_inventory_item(info, uid, session_key):
 
 def update_group_of_item(groupid, barcode, session_key):
     userid = __get_userid_from_key(session_key)
+
     if userid == 'BAD_KEY':
         kwlog.log("Bad Session Key")
         return "BAD_KEY"
     else:
-        if MySQL.get_group_by_barcode(barcode)  == "-1":
-            kwlog.log("Group Already Assigned")
-            return "GROUP_ALREADY_ASSIGNED"
-        else:
-            kwlog.log("Updating group for product")
-            return MySQL.update_group_of_item(groupid, barcode)
+        kwlog.log("Updating group for product")
+        return MySQL.update_group_of_item(groupid, barcode)
