@@ -151,7 +151,11 @@ def service_request(data, connection):
 		name = value_from_header(data, 'name')
 		des = value_from_header(data, 'description')
 		preptime = value_from_header(data, 'preptime')
+		if preptime == "Error":
+			preptime = -1
 		cooktime = value_from_header(data, 'cooktime')
+		if cooktimetime == "Error":
+                        cooktime = -1
 		ingredients = value_from_header(data, 'ingredients')
 		image = ''
 		ingredients = parse_ingredients(ingredients)
