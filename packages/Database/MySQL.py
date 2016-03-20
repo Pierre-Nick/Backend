@@ -366,6 +366,8 @@ def insert_recipe_for_user(userid, recipe):
         return True
     except:
         db.rollback()
+        if kwlog.debug:
+            raise
         return False
 
 
@@ -373,10 +375,12 @@ def insert_items_to_recipe(rid, items):
     for i in items:
         sql = "INSERT INTO Recipe_Item (RecipeID, GroupID, Measurment) VALUES (%s, %s, %s);"
         try:
-            cursor.execute(sql, (rid, items[0], items[1]))
+            cursor.execute(sql, (rid, i[0], i[1]))
             db.commit()
         except:
             db.rollback()
+            if kwlog.debug:
+                raise
             return False
     return True
 
