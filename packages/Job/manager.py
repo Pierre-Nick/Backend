@@ -138,7 +138,7 @@ def service_request(data, connection):
 		man = value_from_header(data, 'manufacturer')
 		amount = value_from_header(data, 'amount')
 		gid = value_from_header(data, 'group')
-		exper_date = value_from_header(data, 'experation')
+		exper_date = value_from_header(data, 'expiration')
 		session_key = value_from_header(data, 'sessionkey')
 		if gid == "na":
 			gid = ""
