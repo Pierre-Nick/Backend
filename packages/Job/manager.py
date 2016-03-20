@@ -154,7 +154,7 @@ def service_request(data, connection):
 		if preptime == "Error":
 			preptime = -1
 		cooktime = value_from_header(data, 'cooktime')
-		if cooktimetime == "Error":
+		if cooktime == "Error":
                         cooktime = -1
 		ingredients = value_from_header(data, 'ingredients')
 		image = ''
