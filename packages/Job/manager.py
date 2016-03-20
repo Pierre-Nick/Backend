@@ -2,7 +2,7 @@ import threading
 import re
 import urllib
 from packages.Log import kwlog
-from packages.Job.util import value_from_header, replace_commas_with_semicolons, replace_commas_with_semicolons_for_groups
+from packages.Job.util import value_from_header, replace_commas_with_semicolons, replace_commas_with_semicolons_for_groups, parse_ingredients
 from packages.Login.createAccount import add_new_user
 from packages.Login.updateAccount import update_account_activation_stats
 from packages.Login.checkLogin import login_to_account
@@ -12,6 +12,7 @@ from packages.Items.addItem import add_new_item_man
 from packages.Items.getItemList import get_item_list
 from packages.Items.removeItem import remove_item
 from packages.Items.updateItem import update_inventory_item, update_group_of_item
+from packages.Recipes.addRecipe import add_recipe
 from packages.Recipes.removeRecipe import remove_recipe
 from packages.Recipes.getRecipeList import get_list_of_recipes
 from packages.Groups.getList import get_list_of_generic_items
@@ -134,7 +135,7 @@ def service_request(data, connection):
 	if command == "manualadd":
 		barcode = value_from_header(data, 'barcode')
 		name = value_from_header(data, 'name')
-		dis = value_from_header(data, 'discription')
+		des = value_from_header(data, 'description')
 		man = value_from_header(data, 'manufacturer')
 		amount = value_from_header(data, 'amount')
 		gid = value_from_header(data, 'group')
@@ -145,6 +146,17 @@ def service_request(data, connection):
 		if exper_date == "na":
 			exper_date = ""
 		result = add_new_item_man(barcode, name, dis, man, amount, gid, exper_date, session_key)
+	if command == "addrecipe":
+		session_key = value_from_header(data, 'sessionkey')
+		name = value_from_header(data, 'name')
+		des = value_from_header(data, 'description')
+		preptime = value_from_header(data, 'preptime')
+		cooktime = value_from_header(data, 'cooktime')
+		ingredients = value_from_header(data, 'ingredients')
+		image = ''
+		ingredients = parse_ingredients(ingredients)
+		data = [name,des,ingredients,image,preptime,cooktime]
+		result = add_recipe(session_key, data)
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
 	kwlog.log("Result sent")

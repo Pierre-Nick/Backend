@@ -33,3 +33,9 @@ def replace_commas_with_semicolons_for_groups(data):
 		if data[i] == "," and  (not in_parenth):
 			data = data[:i] + ';' + data[i+1:]
 	return data
+def parse_ingredients(data):
+	data = str(data)
+	data = data.split('~')
+	for i in range(len(data)):
+		data[i] = data[i].split('`')
+	return data	
