@@ -145,7 +145,7 @@ def service_request(data, connection):
 			gid = ""
 		if exper_date == "na":
 			exper_date = ""
-		result = add_new_item_man(barcode, name, dis, man, amount, gid, exper_date, session_key)
+		result = add_new_item_man(barcode, name, des, man, amount, gid, exper_date, session_key)
 	if command == "addrecipe":
 		session_key = value_from_header(data, 'sessionkey')
 		name = value_from_header(data, 'name')
@@ -162,7 +162,7 @@ def service_request(data, connection):
 		recipe = [name,des,ingredients,image,int(preptime),int(cooktime)]
 		kwlog.log(str(recipe))
 		result = add_recipe(session_key, recipe)
-		
+
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
 	kwlog.log("Result sent")
