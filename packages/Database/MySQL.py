@@ -425,7 +425,6 @@ def update_recipe_name(name, rec_id):
             raise
         return False
 
-<<<<<<< Updated upstream
 def get_ingredients_for_recipe(userid, recipeid):
     if not owned_by_user(userid, recipeid):
         if kwlog.debug:
@@ -438,8 +437,6 @@ def get_ingredients_for_recipe(userid, recipeid):
         return list(data)
     else:
         return None
-=======
->>>>>>> Stashed changes
 
 def owned_by_user(userid, recId):
     sql = "SELECT * FROM Recipe WHERE UserID = %s AND RecipeID = %s;"
