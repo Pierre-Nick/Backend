@@ -3,6 +3,7 @@ from packages.Items.addItem import __get_userid_from_key
 from packages.Database import MySQL
 
 def update_recipe(rec_id, name, dis, image, prepT, cookT, items, itemAction, sessionkey):
+    print("rec: %s\nname: %s\ndis: %s\nimage:%s\nprep:%s\ncook:%s\nitems:%s\naction:%s\nkey:%s" % (str(rec_id), str(name), str(dis), str(image), str(prepT), str(cookT), str(items), str(itemAction), str(sessionkey)))
     userid =  __get_userid_from_key(sessionkey)
 
     if userid == 'BAD_KEY':
@@ -14,7 +15,6 @@ def update_recipe(rec_id, name, dis, image, prepT, cookT, items, itemAction, ses
         elif not (itemAction == "ADD" or itemAction == "REMOVE" or itemAction == "UPDATE" or itemAction == ""):
             return "INVAILD_FORMAT"
         else:
-            print("rec: %s\nname: %s\ndis: %s\nimage:%s\nprep:%s\ncook:%s\nitems:%s\naction:%s\nkey:%s" % (rec_id, name, dis, image, prepT, cookT, str(items), itemAction, sessionkey)))
             if MySQL.owned_by_user(userid, rec_id):
                 if len(name) > 0:
                     if not MySQL.update_recipe_name(name, rec_id):
