@@ -3,7 +3,8 @@ from packages.Items.addItem import __get_userid_from_key
 from packages.Database import MySQL
 
 def update_recipe(rec_id, name, dis, image, prepT, cookT, items, itemAction, sessionkey):
-    userid =  __get_userid_from_key(session_key)
+    print("rec: %s\nname: %s\ndis: %s\nimage:%s\nprep:%s\ncook:%s\nitems:%s\naction:%s\nkey:%s" % (str(rec_id), str(name), str(dis), str(image), str(prepT), str(cookT), str(items), str(itemAction), str(sessionkey)))
+    userid =  __get_userid_from_key(sessionkey)
 
     if userid == 'BAD_KEY':
         kwlog.log("Invaild session key")
