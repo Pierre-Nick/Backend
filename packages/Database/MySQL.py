@@ -561,7 +561,7 @@ def is_vaild_shopping_list(rid, userid):
     if data:
         return True
     else:
-        Return False
+        return False
 
 
 def insert_item_to_list(sid, gid, measurment, userid):
