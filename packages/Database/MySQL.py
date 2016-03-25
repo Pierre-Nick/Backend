@@ -436,6 +436,7 @@ def owned_by_user(userid, recId):
     else:
         return False
 
+
 def update_recipe_dis(dis, rec_id):
     sql = "UPDATE Recipe SET Discription = %s WHERE RecipeID = %s;"
     try:
@@ -447,6 +448,7 @@ def update_recipe_dis(dis, rec_id):
         if kwlog.debug:
             raise
         return False
+
 
 def update_recipe_image(image, rec_id):
     sql = "UPDATE Recipe SET Image = %s WHERE RecipeID = %s;"
@@ -460,6 +462,7 @@ def update_recipe_image(image, rec_id):
             raise
         return False
 
+
 def update_recipe_prep(prepT, rec_id):
     sql = "UPDATE Recipe SET PrepTime = %s WHERE RecipeID = %s;"
     try:
@@ -471,6 +474,7 @@ def update_recipe_prep(prepT, rec_id):
         if kwlog.debug:
             raise
         return False
+
 
 def update_recipe_cook(cookT, rec_id):
     sql = "UPDATE Recipe SET CookTime = %s WHERE RecipeID = %s;"
@@ -484,6 +488,7 @@ def update_recipe_cook(cookT, rec_id):
             raise
         return False
 
+
 def update_recipe_add_item(items, rec_id):
     items = list(items)
     if insert_items_to_recipe(rec_id, items):
@@ -492,6 +497,7 @@ def update_recipe_add_item(items, rec_id):
         if kwlog.debug:
             raise
         return False
+
 
 def update_recipe_remove_item(items, rec_id):
     items = list(items)
@@ -507,6 +513,7 @@ def update_recipe_remove_item(items, rec_id):
                 raise
             return False
 
+
 def update_recipe_update_item(items, rec_id):
     items = list(items)
     for it in items:
@@ -520,3 +527,17 @@ def update_recipe_update_item(items, rec_id):
             if kwlog.debug:
                 raise
             return False
+
+
+def create_new_shopping_list(name, userid):
+    d = str(datetime.now())
+    sql = "INSERT INTO ShoppingList (Name, UserID, DateAdded) VALUES (%s, %s, %s);"
+    try:
+        cursor.execute(sql, (name, userid, d))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
