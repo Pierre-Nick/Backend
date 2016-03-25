@@ -129,23 +129,23 @@ def service_request(data, connection):
 		groupid = value_from_header(data, 'groupid')
 		quantity = value_from_header(data, 'quantity')
 
-		if sessionkey == None:
+		if sessionkey == "Error":
 			sessionkey = ""
-		if name == None:
+		if name == "Error":
 			name = ""
-		if recipeid == None:
+		if recipeid == "Error":
 			recipeid = ""
-		if description == None:
+		if description == "Error":
 			description = ""
-		if preptime == None:
+		if preptime == "Error":
 			preptime = ""
-		if cooktime == None:
+		if cooktime == "Error":
 			cooktime = ""
-		if itemaction == None:
+		if itemaction == "Error":
 			itemaction = ""
-		if groupid == None:
+		if groupid == "Error":
 			groupid = ""
-		if quantity == None:
+		if quantity == "Error":
 			quantity = ""
 		result = update_recipe(recipeid, name, description, image, preptime, cooktime, [groupid, quantity], itemaction, sessionkey)
 	if command == "getgrouplist":
