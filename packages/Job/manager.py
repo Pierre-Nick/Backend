@@ -147,7 +147,7 @@ def service_request(data, connection):
 			groupid = ""
 		if quantity == "Error":
 			quantity = ""
-		result = update_recipe(recipeid, name, description, image, preptime, cooktime, [groupid, quantity], itemaction, sessionkey)
+		result = update_recipe(recipeid, name, description, image, preptime, cooktime, [[groupid, quantity]], itemaction, sessionkey)
 	if command == "getgrouplist":
 		result = replace_commas_with_semicolons_for_groups(get_list_of_generic_items())
 
