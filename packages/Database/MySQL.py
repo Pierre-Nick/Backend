@@ -430,7 +430,7 @@ def get_ingredients_for_recipe(userid, recipeid):
         if kwlog.debug:
             raise
         return "Recipe does not belong to user"
-    sql = "SELECT GroupID,Measurement from Recipe_Item where recipeID = %s"
+    sql = "SELECT GroupID,Measurment from Recipe_Item where recipeID = %s"
     cursor.execute(sql, (recipeid))
     data = cursor.fetchall()
     if data:
