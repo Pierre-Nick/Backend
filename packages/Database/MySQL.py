@@ -575,3 +575,13 @@ def insert_item_to_list(sid, gid, measurment, userid):
         if kwlog.debug:
             raise
         return False
+
+def get_list_of_shopping_items(sid):
+    sql = "SELECT * FROM Shopping_Item WHERE ShoppingList = %s;"\
+    cursor.execute(sql, sid)
+    return cursor.fetchall()
+
+def get_shopping_lists(userid):
+    sql = "SELECT * FROM ShoppingList WHERE UserID = %s;"
+    cursor.execute(sql, userid)
+    return cursor.fetchall()
