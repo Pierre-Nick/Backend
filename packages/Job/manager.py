@@ -120,7 +120,7 @@ def service_request(data, connection):
 	if command == "updaterecipe":
 		sessionkey = value_from_header(data, 'sessionkey')
 		name = value_from_header(data, 'name')
-                recipeid = value_from_header(data, 'recipeid')
+		recipeid = value_from_header(data, 'recipeid')
 		description = value_from_header(data, 'description')
 		image = ''
 		preptime = value_from_header(data, 'preptime')
