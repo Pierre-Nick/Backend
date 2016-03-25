@@ -541,3 +541,37 @@ def create_new_shopping_list(name, userid):
         if kwlog.debug:
             raise
         return False
+
+def is_vaild_group(gid):
+    sql = "SELECT * FROM Grouping WHERE GroupID = %s;"
+    cursor.execute(sql, gid)
+    data = cursor.fetchone()
+
+    if data:
+        return True
+    else:
+        return False
+
+
+def is_vaild_shopping_list(rid, userid):
+    sql = "SELECT * FROM ShoppingList WHERE ID = %s AND UserID = %s;"
+    cursor.execute(sql, (rid, userid))
+    data = cursor.fetchone()
+
+    if data:
+        return True
+    else:
+        Return False
+
+
+def insert_item_to_list(sid, gid, measurment, userid):
+    sql = "INSERT INTO Shopping_Item (ShoppingList, GroupID, Amount) VALUES (%s, %s, %s);"
+    try:
+        cursor.execute(sql, (sid, gid, measurment))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
