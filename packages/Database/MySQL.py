@@ -373,6 +373,8 @@ def insert_recipe_for_user(userid, recipe):
 
 def insert_items_to_recipe(rid, items):
     for i in items:
+        print(str(items))
+        print(str(i))
         sql = "INSERT INTO Recipe_Item (RecipeID, GroupID, Measurment) VALUES (%s, %s, %s);"
         try:
             cursor.execute(sql, (rid, i[0], i[1]))
