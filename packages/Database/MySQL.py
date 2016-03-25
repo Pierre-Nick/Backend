@@ -411,3 +411,112 @@ def update_group_of_item(groupid, barcode):
     except:
         db.rollback()
         return False
+
+
+def update_recipe_name(name, rec_id):
+    sql = "UPDATE Recipe SET Name = %s WHERE RecipeID = %s;"
+    try:
+        cursor.execute(sql, (name, rec_id))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
+
+
+def owned_by_user(userid, recId):
+    sql = "SELECT * FROM Recipe WHERE UserID = %s AND RecipeID = %s;"
+    cursor.execute(sql, (userid, recId))
+    data = cursor.fetchone()
+
+    if data:
+        return True
+    else:
+        return False
+
+def update_recipe_dis(dis, rec_id):
+    sql = "UPDATE Recipe SET Discription = %s WHERE RecipeID = %s;"
+    try:
+        cursor.execute(sql, (dis, rec_id))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
+
+def update_recipe_image(image, rec_id):
+    sql = "UPDATE Recipe SET Image = %s WHERE RecipeID = %s;"
+    try:
+        cursor.execute(sql, (image, rec_id))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
+
+def update_recipe_prep(prepT, rec_id):
+    sql = "UPDATE Recipe SET PrepTime = %s WHERE RecipeID = %s;"
+    try:
+        cursor.execute(sql, (prepT, rec_id))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
+
+def update_recipe_cook(cookT, rec_id):
+    sql = "UPDATE Recipe SET CookTime = %s WHERE RecipeID = %s;"
+    try:
+        cursor.execute(sql, (cookT, rec_id))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
+
+def update_recipe_add_item(items, rec_id):
+    items = list(items)
+    if insert_items_to_recipe(rec_id, items):
+        return True
+    else:
+        if kwlog.debug:
+            raise
+        return False
+
+def update_recipe_remove_item(items, rec_id):
+    items = list(items)
+    for it in items:
+        sql = "DELETE FROM Recipe_Item WHERE RecipeID = %s and GroupID = %s;"
+        try:
+            cursor.execute(sql, (recipeId, it[1]))
+            db.commit()
+            return True
+        except:
+            db.rollback()
+            if kwlog.debug:
+                raise
+            return False
+
+def update_recipe_update_item(items, rec_id):
+    items = list(items)
+    for it in items:
+        sql = "UPDATE Recipe_Item SET Measurment = %s WHERE RecipeID = %s AND GroupID = %s;"
+        try:
+            cursor.execute(sql, (it[1], rec_id, it[0]))
+            db.commit()
+            return True
+        except:
+            db.rollback()
+            if kwlog.debug:
+                raise
+            return False
