@@ -8,7 +8,8 @@ def value_from_header(data, attribute):
 	if result is None:
 		return "Error"
 	else:
-		return result.group(0).split("=")[1].split('&')[0]
+		result =  result.group(0).split("=")[1].split('&')[0]
+		result = result.replace("+"," ")
 
 def replace_commas_with_semicolons(data):
 	data = str(data)
