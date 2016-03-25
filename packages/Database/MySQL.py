@@ -425,6 +425,7 @@ def update_recipe_name(name, rec_id):
             raise
         return False
 
+<<<<<<< Updated upstream
 def get_ingredients_for_recipe(userid, recipeid):
     if not owned_by_user(userid, recipeid):
         if kwlog.debug:
@@ -437,6 +438,8 @@ def get_ingredients_for_recipe(userid, recipeid):
         return list(data)
     else:
         return None
+=======
+>>>>>>> Stashed changes
 
 def owned_by_user(userid, recId):
     sql = "SELECT * FROM Recipe WHERE UserID = %s AND RecipeID = %s;"
@@ -588,12 +591,34 @@ def insert_item_to_list(sid, gid, measurment, userid):
             raise
         return False
 
+
 def get_list_of_shopping_items(sid):
     sql = "SELECT * FROM Shopping_Item WHERE ShoppingList = %s;"
     cursor.execute(sql, sid)
     return cursor.fetchall()
 
+
 def get_shopping_lists(userid):
     sql = "SELECT * FROM ShoppingList WHERE UserID = %s;"
     cursor.execute(sql, userid)
     return cursor.fetchall()
+
+
+def remove_item_from_shopping_list(gid, sid):
+    sql = "DELETE FROM Shopping_Item WHERE ShoppingList = %s and GroupID = %s;"
+    try:
+        cursor.execute(sql, (sid, gid))
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
+
+def remove_all_items_from_shopping_list(sid):
+    data = get_list_of_shopping_items(sid)
+    for d in data:
+        if not remove_item_from_shopping_list(d[2], sid):
+            return False
+    return True
