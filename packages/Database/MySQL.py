@@ -613,9 +613,23 @@ def remove_item_from_shopping_list(gid, sid):
             raise
         return False
 
+
 def remove_all_items_from_shopping_list(sid):
     data = get_list_of_shopping_items(sid)
     for d in data:
         if not remove_item_from_shopping_list(d[2], sid):
             return False
     return True
+
+
+def remove_shopping_list(sid):
+    sql = "DELETE FROM ShoppingList WHERE ID = %s;"
+    try:
+        cursor.execute(sql, sid)
+        db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
