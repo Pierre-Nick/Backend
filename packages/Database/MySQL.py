@@ -573,7 +573,7 @@ def is_vaild_shopping_list(rid, userid):
     if data:
         return True
     else:
-        Return False
+        return False
 
 
 def insert_item_to_list(sid, gid, measurment, userid):
@@ -589,7 +589,7 @@ def insert_item_to_list(sid, gid, measurment, userid):
         return False
 
 def get_list_of_shopping_items(sid):
-    sql = "SELECT * FROM Shopping_Item WHERE ShoppingList = %s;"\
+    sql = "SELECT * FROM Shopping_Item WHERE ShoppingList = %s;"
     cursor.execute(sql, sid)
     return cursor.fetchall()
 
