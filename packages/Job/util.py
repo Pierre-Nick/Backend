@@ -9,7 +9,7 @@ def value_from_header(data, attribute):
 		return "Error"
 	else:
 		result =  result.group(0).split("=")[1].split('&')[0]
-		result = result.replace("+"," ")
+		return result.replace("+"," ")
 
 def replace_commas_with_semicolons(data):
 	data = str(data)
