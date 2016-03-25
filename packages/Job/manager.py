@@ -129,21 +129,21 @@ def service_request(data, connection):
 		groupid = value_from_header(data, 'groupid')
 		quantity = value_from_header(data, 'quantity')
 
-                if sessionkey == None:
+		if sessionkey == None:
 			sessionkey = ""
 		if name == None:
 			name = ""
 		if recipeid == None:
 			recipeid = ""
-                if description == None:
+		if description == None:
 			description = ""
-                if preptime == None:
+		if preptime == None:
 			preptime = ""
-                if cooktime == None:
+		if cooktime == None:
 			cooktime = ""
-                if itemaction == None:
+		if itemaction == None:
 			itemaction = ""
-                if groupid == None:
+		if groupid == None:
 			groupid = ""
 		if quantity == None:
 			quantity = ""
