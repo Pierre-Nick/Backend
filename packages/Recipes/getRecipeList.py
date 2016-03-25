@@ -31,6 +31,8 @@ def get_list_of_ingredients(session_key, recipeid):
 
         ingredients = get_ingredients_for_recipe(userid, recipeid)
         result = ""
+        if ingredients is None:
+            return ""
         for ingredient in ingredients:
             result += str(get_group_name_from_group_id(ingredient[0])[0])+ " " + str(ingredient[1])+"\n"
         return result
