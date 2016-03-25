@@ -425,6 +425,18 @@ def update_recipe_name(name, rec_id):
             raise
         return False
 
+def get_ingredients_for_recipe(userid, recipeid):
+    if not owned_by_user(userid, recipeid):
+        if kwlog.debug:
+            raise
+        return "Recipe does not belong to user"
+    sql = "SELECT GroupID,Measurement from Recipe_Item where recipeID = %s"
+    cursor.execute(sql, (recipeid))
+    data = cursor.fetchall()
+    if data:
+        return list(data)
+    else:
+        return None
 
 def owned_by_user(userid, recId):
     sql = "SELECT * FROM Recipe WHERE UserID = %s AND RecipeID = %s;"

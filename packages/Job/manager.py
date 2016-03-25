@@ -14,7 +14,7 @@ from packages.Items.removeItem import remove_item
 from packages.Items.updateItem import update_inventory_item, update_group_of_item
 from packages.Recipes.addRecipe import add_recipe
 from packages.Recipes.removeRecipe import remove_recipe
-from packages.Recipes.getRecipeList import get_list_of_recipes
+from packages.Recipes.getRecipeList import get_list_of_recipes, get_list_of_ingredients
 from packages.Groups.getList import get_list_of_generic_items
 worker_cap = 7
 job_queue = []
@@ -107,6 +107,10 @@ def service_request(data, connection):
                 sessionkey = value_from_header(data, 'sessionkey')
                 result = replace_commas_with_semicolons(get_list_of_recipes(sessionkey))
 
+	if command == "getingredients":
+		sessionkey = value_from_header(data, 'sessionkey')
+		recipeid = value_from_header(data, 'recipeid')
+		result = get_list_of_ingredients(sessionkey, recipeid)
 	if command == "removerecipe":
 		recipe_id = value_from_header(data, 'recipeid')
 		sessionkey = value_from_header(data, 'sessionkey')
