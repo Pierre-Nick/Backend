@@ -15,6 +15,7 @@ from packages.Items.updateItem import update_inventory_item, update_group_of_ite
 from packages.Recipes.addRecipe import add_recipe
 from packages.Recipes.removeRecipe import remove_recipe
 from packages.Recipes.getRecipeList import get_list_of_recipes, get_list_of_ingredients
+from packages.Recipes.updateRecipe import update_recipe
 from packages.Groups.getList import get_list_of_generic_items
 worker_cap = 7
 job_queue = []
@@ -115,6 +116,38 @@ def service_request(data, connection):
 		recipe_id = value_from_header(data, 'recipeid')
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = remove_recipe(recipe_id, sessionkey)
+
+	if command == "updaterecipe":
+		sessionkey = value_from_header(data, 'sessionkey')
+		name = value_from_header(data, 'name')
+                recipeid = value_from_header(data, 'recipeid')
+		description = value_from_header(data, 'description')
+		image = ''
+		preptime = value_from_header(data, 'preptime')
+		cooktime = value_from_header(data, 'cooktime')
+		itemaction = value_from_header(data, 'itemaction')
+		groupid = value_from_header(data, 'groupid')
+		quantity = value_from_header(data, 'quantity')
+
+                if sessionkey == None:
+			sessionkey = ""
+		if name == None:
+			name = ""
+		if recipeid == None:
+			recipeid = ""
+                if description == None:
+			description = ""
+                if preptime == None:
+			preptime = ""
+                if cooktime == None:
+			cooktime = ""
+                if itemaction == None:
+			itemaction = ""
+                if groupid == None:
+			groupid = ""
+		if quantity == None:
+			quantity = ""
+		result = update_recipe(recipeid, name, description, image, preptime, cooktime, [groupid, quantity], itemaction, sessionkey)
 	if command == "getgrouplist":
 		result = replace_commas_with_semicolons_for_groups(get_list_of_generic_items())
 
