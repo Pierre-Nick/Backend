@@ -540,6 +540,17 @@ def update_recipe_update_item(items, rec_id):
                 raise
             return False
 
+def remove_all_items_from_recipe(recipeid):
+    sql = "DELETE FROM Recipe_Item WHERE RecipeID = %s;"
+    try:
+        cursor.execute(sql, (recipeid))
+	db.commit()
+        return True
+    except:
+        db.rollback()
+        if kwlog.debug:
+            raise
+        return False
 
 def create_new_shopping_list(name, userid):
     d = str(datetime.now())

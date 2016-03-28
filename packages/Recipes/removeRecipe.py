@@ -31,7 +31,7 @@ def remove_recipe(recipe_id, session_key):
         kwlog.log("Recipe not in inventory")
         return False
     else:
-        if __remove_recipe_from_db(recipe_id):
+        if MySQL.remove_all_items_from_recipe(recipe_id) and  __remove_recipe_from_db(recipe_id):
             kwlog.log("recipe removed from DB")
             return True
         else:
