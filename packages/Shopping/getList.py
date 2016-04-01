@@ -19,6 +19,24 @@ def __create_shopping_list(userid):
         final.append(list(k))
     return list(final)
 
+
+def create_json_format(shoping_list):
+    string = "<Shopping>"
+    for s in shoping_list:
+        string = string + "<List><ID>" + str(s[0]) + "</ID>"
+        string = string + "<Name>" + str(s[1]) + "</Name>"
+        sting = string + "<Items>"
+        for k in s[2]:
+            string = string + "<Name>" + str(k[0]) + "</Name>"
+            string = string + "<Amount>" + str(s[1]) + "</Amount>"
+
+        string = string + "</Items>"
+        string = string + "<UserID>" + str(s[3]) + "</UserID>"
+        string = string + "<Date>" + str(s[4]) + "</Date></List>"
+    string = string + "</Shopping>"
+    #string = string + shoping_list[]
+    return str(string)
+
 def get_shopping_lists(session_key):
     userid =  __get_userid_from_key(session_key)
 
@@ -26,4 +44,4 @@ def get_shopping_lists(session_key):
         kwlog.log("Invaild session key")
         return "BAD_KEY"
     else:
-        return __create_shopping_list(userid)
+        return create_json_format(__create_shopping_list(userid))
