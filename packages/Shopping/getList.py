@@ -21,11 +21,15 @@ def __create_shopping_list(userid):
 
 
 def create_json_format(shoping_list):
+    # For future Versions of Kitchen Wizard
+    # Not added into proto of product
+    
     string = "<Shopping>"
     for s in shoping_list:
         string = string + "<List><ID>" + str(s[0]) + "</ID>"
         string = string + "<Name>" + str(s[1]) + "</Name>"
         sting = string + "<Items>"
+
         for k in s[2]:
             string = string + "<Name>" + str(k[0]) + "</Name>"
             string = string + "<Amount>" + str(s[1]) + "</Amount>"
