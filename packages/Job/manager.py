@@ -17,6 +17,7 @@ from packages.Recipes.removeRecipe import remove_recipe
 from packages.Recipes.getRecipeList import get_list_of_recipes, get_list_of_ingredients
 from packages.Recipes.updateRecipe import update_recipe
 from packages.Groups.getList import get_list_of_generic_items
+from packages.Shopping.createList import create_new_list
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -203,6 +204,11 @@ def service_request(data, connection):
 		recipe = [name,des,ingredients,image,int(preptime),int(cooktime)]
 		kwlog.log(str(recipe))
 		result = add_recipe(session_key, recipe)
+
+	if command == "addshoppinglist":
+		session_key = value_from_header(data, 'sessionkey')
+		name = value_from_header(data, 'name')
+		result = create_new_list(name, session_key)
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
