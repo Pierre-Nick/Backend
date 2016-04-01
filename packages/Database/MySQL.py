@@ -336,7 +336,7 @@ def update_password_for_user(userid, password):
 
 def is_recipe_in_db(recipeid, userid):
     sql = "SELECT * FROM recipe WHERE UserID = %s AND RecipeID = %s;"
-    cursor.execute(sql, (str(userid), str(recipe_id)))
+    cursor.execute(sql, (str(userid), str(recipeid)))
     data = cursor.fetchone()
     return data
 
