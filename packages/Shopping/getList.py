@@ -26,4 +26,4 @@ def get_shopping_lists(session_key):
         kwlog.log("Invaild session key")
         return "BAD_KEY"
     else:
-        return __create_shopping_lists(userid)
+        return __create_shopping_list(userid)
