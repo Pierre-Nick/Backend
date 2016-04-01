@@ -348,7 +348,7 @@ def get_recipes_for_user(userid):
     except:
         return "Error getting recipes"
 
-def remove_recipes_from_db(recipeId):
+def remove_recipe_from_db(recipeId):
     sql = "DELETE FROM Recipe WHERE RecipeID = %s;"
     try:
         cursor.execute(sql, (recipeId))
