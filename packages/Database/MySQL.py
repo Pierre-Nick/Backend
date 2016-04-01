@@ -544,7 +544,7 @@ def remove_all_items_from_recipe(recipeid):
     sql = "DELETE FROM Recipe_Item WHERE RecipeID = %s;"
     try:
         cursor.execute(sql, (recipeid))
-	db.commit()
+        db.commit()
         return True
     except:
         db.rollback()
