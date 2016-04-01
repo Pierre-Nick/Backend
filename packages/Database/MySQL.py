@@ -349,12 +349,14 @@ def get_recipes_for_user(userid):
         return "Error getting recipes"
 
 def remove_recipe_from_db(recipeId):
+    kwlog.log(recipeId)
     sql = "DELETE FROM Recipe WHERE RecipeID = %s;"
     try:
         cursor.execute(sql, (recipeId))
         db.commit()
         return True
     except:
+        raise
         db.rollback()
         return False
 def insert_recipe_for_user(userid, recipe):
