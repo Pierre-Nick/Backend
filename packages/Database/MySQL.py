@@ -349,7 +349,7 @@ def get_recipes_for_user(userid):
         return "Error getting recipes"
 
 def remove_recipe_from_db(recipeId):
-    kwlog.log(recipeId)
+    kwlog.log(str(recipeId))
     sql = "DELETE FROM Recipe WHERE RecipeID = %s;"
     try:
         cursor.execute(sql, (recipeId))
