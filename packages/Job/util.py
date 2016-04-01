@@ -18,6 +18,7 @@ def replace_commas_with_semicolons(data):
 	for i in range(len(data)):
 		if (data[i] == "\'" or data[i] == "\"") and not re.search(r'[a-zA-Z\d\+]\'[a-zA-Z\d]', data[i-1:i+2]):
 			in_string =  not in_string
+			print("change at:" + str(i))
 		elif data[i] == "," and  not in_string:
 			data = data[:i] + ';' + data[i+1:]
 	return data
