@@ -18,6 +18,7 @@ from packages.Recipes.getRecipeList import get_list_of_recipes, get_list_of_ingr
 from packages.Recipes.updateRecipe import update_recipe
 from packages.Groups.getList import get_list_of_generic_items
 from packages.Shopping.createList import create_new_list
+from packages.Shopping.getList import get_shopping_lists
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -209,6 +210,10 @@ def service_request(data, connection):
 		session_key = value_from_header(data, 'sessionkey')
 		name = value_from_header(data, 'name')
 		result = replace_commas_with_semicolons(create_new_list(name, session_key))
+
+	if command == "getshoppinglists":
+		session_key = value_from_header(data, 'sessionkey')
+		result = get_shopping_lists(session_key)
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
