@@ -208,7 +208,7 @@ def service_request(data, connection):
 	if command == "addshoppinglist":
 		session_key = value_from_header(data, 'sessionkey')
 		name = value_from_header(data, 'name')
-		result = create_new_list(name, session_key)
+		result = replace_commas_with_semicolons(create_new_list(name, session_key))
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
