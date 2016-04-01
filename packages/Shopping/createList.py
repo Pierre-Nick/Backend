@@ -4,7 +4,7 @@ from packages.Database import MySQL
 
 def create_new_list(name, sessionkey):
     if len(sessionkey) > 0:
-        userid =  __get_userid_from_key(session_key)
+        userid =  __get_userid_from_key(sessionkey)
     else:
         return "INVAILD_FORMAT"
 
