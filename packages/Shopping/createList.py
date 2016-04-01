@@ -2,7 +2,7 @@ from packages.Log import kwlog
 from packages.Items.addItem import __get_userid_from_key
 from packages.Database import MySQL
 
-create_new_list(name, sessionkey):
+def create_new_list(name, sessionkey):
     if len(sessionkey) > 0:
         userid =  __get_userid_from_key(session_key)
     else:
