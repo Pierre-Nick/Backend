@@ -334,11 +334,13 @@ def update_password_for_user(userid, password):
         db.rollback()
         return False
 
+
 def is_recipe_in_db(recipeid, userid):
     sql = "SELECT * FROM Recipe WHERE UserID = %s AND RecipeID = %s;"
     cursor.execute(sql, (str(userid), str(recipeid)))
     data = cursor.fetchone()
     return data
+
 
 def get_recipes_for_user(userid):
     sql = "select * from Recipe where UserID = %s"
@@ -347,6 +349,7 @@ def get_recipes_for_user(userid):
         return cursor.fetchall()
     except:
         return "Error getting recipes"
+
 
 def remove_recipe_from_db(recipeId):
     kwlog.log(str(recipeId))
@@ -359,6 +362,8 @@ def remove_recipe_from_db(recipeId):
         raise
         db.rollback()
         return False
+
+
 def insert_recipe_for_user(userid, recipe):
     d = str(datetime.now())
     sql = "INSERT INTO Recipe (Name, Discription, Image, PrepTime, CookTime, UserID, DateAdded) VALUES (%s, %s, %s, %s, %s, %s, %s);"
@@ -646,3 +651,9 @@ def remove_shopping_list(sid):
         if kwlog.debug:
             raise
         return False
+
+
+def get_email_for_user(userid):
+    sql = "SELECT Email FROM User_Information WHERE UserID = %s;"
+    cursor.execute(sql, userid)
+    return str(cursor.fetchone()[0])

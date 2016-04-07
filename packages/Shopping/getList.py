@@ -23,7 +23,6 @@ def __create_shopping_list(userid):
 def create_json_format(shoping_list):
     # For future Versions of Kitchen Wizard
     # Not added into proto of product
-    
     string = "<Shopping>"
     for s in shoping_list:
         string = string + "<List><ID>" + str(s[0]) + "</ID>"
