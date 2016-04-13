@@ -523,7 +523,7 @@ def update_recipe_remove_item(items, rec_id):
     for it in items:
         sql = "DELETE FROM Recipe_Item WHERE RecipeID = %s and GroupID = %s;"
         try:
-            cursor.execute(sql, (recipeId, it[1]))
+            cursor.execute(sql, (rec_id, it[1]))
             db.commit()
             return True
         except:
