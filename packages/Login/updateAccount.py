@@ -61,7 +61,7 @@ def __get_userid_from_key(key):
     # Return str
     kwlog.log("Get userid from key")
     if(__vaildate_sessionkey(key)):
-        return __get_userid_from_session_key(key)
+        return __get_userid_from_key(key)
     else:
         return "BAD_KEY"
 
