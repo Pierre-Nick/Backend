@@ -106,7 +106,7 @@ def service_request(data, connection):
 			email = ''
 		if password == "Error":
 			password = ''
-		result = update_account_information(fname, lname, email, password, sessionkey)
+		result = update_account_information(fname, lname, email, password.encode("utf-8"), sessionkey)
 	if command == "additem":
 		barcode = value_from_header(data, 'barcode')
 		sessionkey = value_from_header(data, 'sessionkey')
