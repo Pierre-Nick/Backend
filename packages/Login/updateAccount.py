@@ -16,7 +16,7 @@ from packages.Log import kwlog
 from packages.Database import MySQL
 #from packages.Items.addItem import __get_userid_from_key
 from packages.Items.updateItem import __vaildate_sessionkey
-
+import hashlib
 
 def __check_code(userid, code):
     # Check code aginst DB
@@ -112,7 +112,7 @@ def update_account_information(fname, lname, email, password, sessionkey):
         if not MySQL.update_email_for_user(userid, email):
             return False
     if len(password) > 0:
-        #password = __encrypt_password(password)
+        password = __encrypt_password(password)
         if not MySQL.update_password_for_user(userid, password):
             return False
     return True
