@@ -14,6 +14,7 @@ from packages.Login.checkLogin import *
 from datetime import datetime
 from packages.Log import kwlog
 from packages.Database import MySQL
+from packages.Items.addItem import __get_userid_from_key
 
 
 def __check_code(userid, code):

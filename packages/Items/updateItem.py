@@ -2,7 +2,7 @@
 from packages.Log import kwlog
 from packages.Database import MySQL
 from datetime import *
-from packages.Items.addItem import __get_userid_from_key
+
 
 def __check_vaild_date(key):
     # Checks if key vaild date has passed
