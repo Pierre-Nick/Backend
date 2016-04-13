@@ -112,7 +112,7 @@ def update_account_information(fname, lname, email, password, sessionkey):
         if not MySQL.update_email_for_user(userid, email):
             return False
     if len(password) > 0:
-        password = __encrypt_password(password)
+        #password = __encrypt_password(password)
         if not MySQL.update_password_for_user(userid, password):
             return False
     return True
