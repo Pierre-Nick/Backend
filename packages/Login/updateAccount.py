@@ -15,6 +15,7 @@ from datetime import datetime
 from packages.Log import kwlog
 from packages.Database import MySQL
 from packages.Items.addItem import __get_userid_from_key
+from packages.Items.updateItem import __vaildate_sessionkey
 
 
 def __check_code(userid, code):
@@ -60,7 +61,7 @@ def __get_userid_from_key(key):
     # Return str
     kwlog.log("Get userid from key")
     if(__vaildate_sessionkey(key)):
-        return get_userid_from_session_key(key)
+        return __get_userid_from_session_key(key)
     else:
         return "BAD_KEY"
 
