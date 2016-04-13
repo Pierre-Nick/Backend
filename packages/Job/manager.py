@@ -4,7 +4,7 @@ import urllib
 from packages.Log import kwlog
 from packages.Job.util import value_from_header, replace_commas_with_semicolons, replace_commas_with_semicolons_for_groups, parse_ingredients
 from packages.Login.createAccount import add_new_user
-from packages.Login.updateAccount import update_account_activation_stats
+from packages.Login.updateAccount import update_account_activation_stats, update_account_information
 from packages.Login.checkLogin import login_to_account
 from packages.Listen.reply import send
 from packages.Items.addItem import add_new_item
@@ -92,6 +92,21 @@ def service_request(data, connection):
 		kwlog.log(str(username + ":"+ password))
 		result = login_to_account(username, password.encode("utf-8"))
 
+	if command == "updateaccount":
+		sessionkey = value_from_header(data, 'sessionkey')
+		fname = value_from_header(data, 'fname')
+		lname = value_from_header(data, 'lname')
+		email = value_from_header(data, 'email')
+		password = value_from_header(data, 'password')
+		if fname == "Error":
+			fname = ''
+		if lname == "Error":
+			lname = ''
+		if email == "Error":
+			email = ''
+		if password == "Error":
+			password = ''
+		result = update_account_information(fname, lname, email, password, sessionkey)
 	if command == "additem":
 		barcode = value_from_header(data, 'barcode')
 		sessionkey = value_from_header(data, 'sessionkey')
@@ -214,6 +229,10 @@ def service_request(data, connection):
 	if command == "getshoppinglists":
 		session_key = value_from_header(data, 'sessionkey')
 		result = replace_commas_with_semicolons(get_shopping_lists(session_key))
+
+	if command == "addshoppinglistitem":
+		session_key = value_from_header(data, 'sessionkey')
+		
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
