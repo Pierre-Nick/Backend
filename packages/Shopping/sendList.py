@@ -44,9 +44,10 @@ def __send_email(userid, sid):
                 <tr><th>Item</th><th>Quantity</th></tr>
                 %s
                 </table>
+                <br/><br/><br/>
                 <p>
-                Remember,
-                Everyone Loves KitchenWizard
+                Remember,<br/>
+                Everyone Loves KitchenWizard!!!
                 </p>
             </body>
         </html>
