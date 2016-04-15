@@ -9,7 +9,7 @@ def __get_list(sid):
         if MySQL.get_group_name_from_group_id(s[2]):
             k = [str(MySQL.get_group_name_from_group_id(s[2])[0]), s[3]]
         else:
-            k = str("NONE", s[3]]
+            k = ["NONE", s[3]]
         final.append(list(k))
     return list(final)
 
