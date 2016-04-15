@@ -13,8 +13,8 @@ def __create_list(sid):
     print("list result:" + str(l))
     final = ""
     for k in l:
-        if MySQL.get_group_name_from_group_id(gidk[2]):
-            final = final + ("<li>%s</li>" % str(MySQL.get_group_name_from_group_id(gidk[2])[0]))
+        if MySQL.get_group_name_from_group_id(k[2]):
+            final = final + ("<li>%s</li>" % str(MySQL.get_group_name_from_group_id(k[2])[0]))
     return final
 
 
@@ -66,7 +66,7 @@ def send_list(sid, session_key):
     if not MySQL.is_vaild_shopping_list(sid, userid):
         kwlog.log("Invaild Shopping List")
         return "BAD_LIST"
-    if not __send_email(userid, session_key):
+    if not __send_email(userid, sid):
         kwlog.log("Failed to send shopping list")
         return "SEND_FAILED"
     else:
