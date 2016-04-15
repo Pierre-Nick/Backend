@@ -252,9 +252,9 @@ def service_request(data, connection):
 		listid = value_from_header(data, 'listid')
 		result = remove_all_items_from_list(listid, sessionkey)
 
-	if command == "sendlist":
+	if command == "sendshoppinglist":
 		sessionkey = value_from_header(data, 'sessionkey')
-                listid = value_from_header(data, 'listid')
+		listid = value_from_header(data, 'listid')
 		result = send_list(listid, sessionkey)
 
 	kwlog.log("Result: " + str(result))

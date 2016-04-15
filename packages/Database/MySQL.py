@@ -608,6 +608,7 @@ def insert_item_to_list(sid, gid, measurment, userid):
 
 
 def get_list_of_shopping_items(sid):
+    print(str(sid))
     sql = "SELECT * FROM Shopping_Item WHERE ShoppingList = %s;"
     cursor.execute(sql, sid)
     return cursor.fetchall()

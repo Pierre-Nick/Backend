@@ -8,7 +8,9 @@ from packages.Database import MySQL
 from packages.Items.addItem import __get_userid_from_key
 
 def __create_list(sid):
+    print("Starting get_list")
     l = list(MySQL.get_list_of_shopping_items(sid))
+    print("list result:" + str(l))
     final = ""
     for k in l:
         if MySQL.get_group_name_from_group_id(gidk[2]):
