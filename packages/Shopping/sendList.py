@@ -18,7 +18,7 @@ def __create_list(sid):
 
 def __send_email(userid, sid):
     email = MySQL.get_email_for_user(userid)
-    list_str = __create_list
+    list_str = __create_list(sid)
 
     if list_str == "FAILED":
         return False
