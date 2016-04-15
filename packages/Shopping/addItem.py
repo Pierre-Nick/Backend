@@ -3,7 +3,7 @@ from packages.Items.addItem import __get_userid_from_key
 from packages.Database import MySQL
 
 def add_item_to_list(gid, measurment, sid, session):
-    userid =  __get_userid_from_key(session_key)
+    userid =  __get_userid_from_key(session)
 
     if userid == 'BAD_KEY':
         kwlog.log("Invaild session key")
