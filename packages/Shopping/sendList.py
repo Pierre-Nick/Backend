@@ -14,7 +14,7 @@ def __create_list(sid):
     final = ""
     for k in l:
         if MySQL.get_group_name_from_group_id(k[2]):
-            final = final + ("<li>%s &#09; %s</li>" % (str(MySQL.get_group_name_from_group_id(k[2])[0]), str(k[3])))
+            final = final + ("<li>%s&#09;%s</li>" % (str(MySQL.get_group_name_from_group_id(k[2])[0]), str(k[3])))
     return final
 
 
