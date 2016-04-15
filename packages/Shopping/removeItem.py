@@ -4,7 +4,7 @@ from packages.Database import MySQL
 
 
 def remove_item_from_list(rid, gid, session):
-    userid =  __get_userid_from_key(session_key)
+    userid =  __get_userid_from_key(session)
 
     if userid == 'BAD_KEY':
         kwlog.log("Invaild session key")
@@ -20,7 +20,7 @@ def remove_item_from_list(rid, gid, session):
                 return "REMOVE_ITEM_COMPLETE"
 
 def remove_all_items_from_list(rid, session):
-    userid =  __get_userid_from_key(session_key)
+    userid =  __get_userid_from_key(session)
 
     if userid == 'BAD_KEY':
         kwlog.log("Invaild session key")
