@@ -64,7 +64,7 @@ def send_list(sid, session_key):
     if not MySQL.is_vaild_shopping_list(sid, userid):
         kwlog.log("Invaild Shopping List")
         return "BAD_LIST"
-    if not __send_email(userid):
+    if not __send_email(userid, session_key):
         kwlog.log("Failed to send shopping list")
         return "SEND_FAILED"
     else:
