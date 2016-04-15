@@ -12,7 +12,7 @@ def __create_list(sid):
     final = ""
     for k in l:
         if MySQL.get_group_name_from_group_id(gidk[2]):
-            final = final + "<li>" + str(MySQL.get_group_name_from_group_id(gidk[2])[0]) + "</li>"
+            final = final + ("<li>%s</li>" % str(MySQL.get_group_name_from_group_id(gidk[2])[0]))
     return final
 
 
