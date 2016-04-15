@@ -14,7 +14,7 @@ def __create_list(sid):
     final = ""
     for k in l:
         if MySQL.get_group_name_from_group_id(k[2]):
-            final = final + ("<li>%s&#09;%s</li>" % (str(MySQL.get_group_name_from_group_id(k[2])[0]), str(k[3])))
+            final = final + ("<tr><td>%s</td><td>%s</td></tr>" % (str(MySQL.get_group_name_from_group_id(k[2])[0]), str(k[3])))
     return final
 
 
@@ -40,7 +40,10 @@ def __send_email(userid, sid):
             <head></head>
             <body>
                 <h1>Shopping List</h1>
-                <ul>%s</ul>
+                <table>
+                <tr><th>Item</th><th>Quantity</th></tr>
+                %s
+                </table>
             </body>
         </html>
         """ % (list_str)
