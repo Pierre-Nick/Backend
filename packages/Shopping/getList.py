@@ -6,7 +6,7 @@ def __get_list(sid):
     final = []
     slist = MySQL.get_list_of_shopping_items(sid)
     for s in slist:
-        k = [MySQL.get_group_name_from_group_id(s[2]), s[3]]
+        k = [str(MySQL.get_group_name_from_group_id(s[2])[0]), s[3]]
         final.append(list(k))
     return list(final)
 
