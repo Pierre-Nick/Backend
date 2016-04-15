@@ -40,7 +40,7 @@ def __send_email(userid, sid):
             <head></head>
             <body>
                 <h1>Shopping List</h1>
-                <table>
+                <table cellpadding = \"15\" border = \"1\">
                 <tr><th>Item</th><th>Quantity</th></tr>
                 %s
                 </table>
