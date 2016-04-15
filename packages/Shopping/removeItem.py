@@ -28,7 +28,7 @@ def remove_all_items_from_list(rid, session):
         kwlog.log("Invaild session key")
         return "BAD_KEY"
     else:
-        if not MySQL.is_vaild_shopping_shopping_list(rid, userid):
+        if not MySQL.is_vaild_shopping_list(rid, userid):
             kwlog.log("List not owned by user")
             return "INVAILD_SHOPPING_LIST"
         else:
