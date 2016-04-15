@@ -19,6 +19,7 @@ from packages.Recipes.updateRecipe import update_recipe
 from packages.Groups.getList import get_list_of_generic_items
 from packages.Shopping.createList import create_new_list
 from packages.Shopping.getList import get_shopping_lists
+from packages.Shopping.addItem import add_item_to_list
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -229,10 +230,15 @@ def service_request(data, connection):
 	if command == "getshoppinglists":
 		session_key = value_from_header(data, 'sessionkey')
 		result = replace_commas_with_semicolons(get_shopping_lists(session_key))
+		result = result[1:-1]
+		kwlog.log(result)
 
 	if command == "addshoppinglistitem":
-		session_key = value_from_header(data, 'sessionkey')
-		
+		sessionkey = value_from_header(data, 'sessionkey')
+		groupid = value_from_header(data, 'groupid')
+		quantity = value_from_header(data, 'quantity')
+		listid = value_from_header(data, 'listid')
+		result =  add_item_to_list(groupid, quantity, listid, sessionkey)
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
