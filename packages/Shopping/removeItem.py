@@ -10,7 +10,7 @@ def remove_item_from_list(rid, gid, session):
         kwlog.log("Invaild session key")
         return "BAD_KEY"
     else:
-        if not is_vaild_group(gid):
+        if not MySQL.is_vaild_group(gid):
             return "INVAILD_GROUP"
         if not MySQL.is_vaild_shopping_list(rid, userid):
             kwlog.log("List not owned by user")
@@ -32,7 +32,7 @@ def remove_all_items_from_list(rid, session):
             kwlog.log("List not owned by user")
             return "INVAILD_SHOPPING_LIST"
         else:
-            if not is_vaild_group(gid):
+            if not MySQL.is_vaild_group(gid):
                 return "INVAILD_GROUP"
             if not MySQL.remove_all_items_from_shopping_list(rid):
                 kwlog.log("Unable to remove items from list")
