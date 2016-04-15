@@ -21,6 +21,7 @@ from packages.Shopping.createList import create_new_list
 from packages.Shopping.getList import get_shopping_lists
 from packages.Shopping.addItem import add_item_to_list
 from packages.Shopping.removeItem import remove_item_from_list, remove_all_items_from_list
+from packages.Shopping.sendList import send_list
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -250,6 +251,11 @@ def service_request(data, connection):
 		sessionkey = value_from_header(data, 'sessionkey')
 		listid = value_from_header(data, 'listid')
 		result = remove_all_items_from_list(listid, sessionkey)
+
+	if command == "sendlist":
+		sessionkey = value_from_header(data, 'sessionkey')
+                listid = value_from_header(data, 'listid')
+		result = send_list(listid, sessionkey)
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
