@@ -11,7 +11,8 @@ def __create_list(sid):
     l = list(get_list_of_shopping_items(sid))
     final = ""
     for k in l:
-        final = final + "<li>" + str(MySQL.get_group_name_from_group_id(gidk[2])) + "</li>"
+        if MySQL.get_group_name_from_group_id(gidk[2]):
+            final = final + "<li>" + str(MySQL.get_group_name_from_group_id(gidk[2])[0]) + "</li>"
     return final
 
 
