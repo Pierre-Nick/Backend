@@ -1,7 +1,7 @@
 from packages.Log import kwlog
 from packages.Items.addItem import __get_userid_from_key
 from packages.Database import MySQL
-from package.Shopping import createList
+from packages.Shopping import createList
 
 def add_item_to_list(gid, measurment, sid, session):
     userid =  __get_userid_from_key(session)
