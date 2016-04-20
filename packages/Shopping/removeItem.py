@@ -23,7 +23,7 @@ def remove_item_from_list(rid, gid, session):
 
 def remove_all_items_from_list(rid, session):
     userid =  __get_userid_from_key(session)
-
+    print(rid)
     if userid == 'BAD_KEY':
         kwlog.log("Invaild session key")
         return "BAD_KEY"
