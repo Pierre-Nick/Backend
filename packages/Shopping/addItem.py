@@ -1,6 +1,7 @@
 from packages.Log import kwlog
 from packages.Items.addItem import __get_userid_from_key
 from packages.Database import MySQL
+from package.Shopping import createList
 
 def add_item_to_list(gid, measurment, sid, session):
     userid =  __get_userid_from_key(session)
@@ -17,6 +18,14 @@ def add_item_to_list(gid, measurment, sid, session):
             return "INVAILD_GROUP"
         if not MySQL.is_vaild_shopping_list(sid, userid):
             kwlog.log("Invaild shopping list id")
+            name = "%s list" % str(userid)
+            createList.create_new_list(name, session)
+            sid = MySQL.get_shopping_lists(userid)[0][0]
+            if not MySQL.insert_item_to_list(sid, gid, measurment, userid):
+                kwlog.log("Unable to add item to list")
+                return "FAILED_TO_ADD_ITEM"
+            else:
+                return "ADD_ITEM_COMPLETE"
             return "INVAILD_SHOPPING_LIST"
         if not MySQL.insert_item_to_list(sid, gid, measurment, userid):
             kwlog.log("Unable to add item to list")

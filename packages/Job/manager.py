@@ -242,6 +242,7 @@ def service_request(data, connection):
 		quantity = value_from_header(data, 'quantity')
 		listid = value_from_header(data, 'listid')
 		result =  add_item_to_list(groupid, quantity, listid, sessionkey)
+		print(result)
 
 	if command == "removeshoppinglistitem":
 		listid = value_from_header(data, 'listid')
