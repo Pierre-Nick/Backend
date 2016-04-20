@@ -177,21 +177,22 @@ def put_new_account(username, fname, lname, email, hash):
     date = datetime.today()
     date = date + timedelta(6 * 30)
     hash = encrypt_password(hash)
-    f_sql = "INSERT INTO User_Information (UserID, FirstName, LastName, Email, CreationDate) VALUES ('%s', '%s', '%s', '%s', '%s');" % (username, fname, lname, email, d)
-    p_sql = "INSERT INTO Password (PasswordHash, User_id, UpdatedOn) VALUES ('%s', '%s', '%s');" % (hash, username, d)
-    s_sql = "INSERT INTO Session_Key (UserID, SessionKey, AgeOffDate) VALUES ('%s', '%s', '%s');" % (username, '0000000', date)
+    f_sql = "INSERT INTO User_Information (UserID, FirstName, LastName, Email, CreationDate) VALUES (%s, %s, %s, %s, %s);"
+    p_sql = "INSERT INTO Password (PasswordHash, User_id, UpdatedOn) VALUES (%s, %s, %s);"
+    s_sql = "INSERT INTO Session_Key (UserID, SessionKey, AgeOffDate) VALUES (%s, %s, %s);"
 
     try:
-        cursor.execute(f_sql)
+        cursor.execute(f_sql, (username, fname, lname, email, d))
         kwlog.log("User_Information SQL completed")
-        cursor.execute(p_sql)
+        cursor.execute(p_sql, (hash, username, d))
         kwlog.log("Password SQL completed")
-        cursor.execute(s_sql)
+        cursor.execute(s_sql, (username, '0000000', date))
         kwlog.log("Session SQL completed")
         db.commit()
         return True
     except:
         #db.rollback()
+        raise
         return False
 
 
