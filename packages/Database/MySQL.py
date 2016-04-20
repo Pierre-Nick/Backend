@@ -74,7 +74,11 @@ def get_group_by_name(name):
     kwlog.log("Get category by name")
     sql = "SELECT * FROM Grouping WHERE GroupName = %s;"
     cursor.execute(sql, name)
-    return cursor.fetchone()
+    k = cursor.fetchone()
+    if k:
+        return "NONE"
+    else:
+        return str(k[0])
 
 
 def get_inventory_list_for_user(userid):
@@ -521,10 +525,11 @@ def update_recipe_add_item(items, rec_id):
 
 def update_recipe_remove_item(items, rec_id):
     items = list(items)
+    print(items)
     for it in items:
         sql = "DELETE FROM Recipe_Item WHERE RecipeID = %s and GroupID = %s;"
         try:
-            cursor.execute(sql, (rec_id, it[1]))
+            cursor.execute(sql, (rec_id, it[0]))
             db.commit()
             return True
         except:

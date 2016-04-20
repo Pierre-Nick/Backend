@@ -17,6 +17,7 @@ from packages.Recipes.removeRecipe import remove_recipe
 from packages.Recipes.getRecipeList import get_list_of_recipes, get_list_of_ingredients
 from packages.Recipes.updateRecipe import update_recipe
 from packages.Groups.getList import get_list_of_generic_items
+from packages.Groups.getGroupID import get_group_id
 from packages.Shopping.createList import create_new_list
 from packages.Shopping.getList import get_shopping_lists
 from packages.Shopping.addItem import add_item_to_list
@@ -261,6 +262,10 @@ def service_request(data, connection):
 	if command == "getshoppinglistid":
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = get_list_ID(sessionkey)
+
+	if command == "getgroupid":
+		name = value_from_header(data, 'name')
+		result = get_group_id(name)
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
