@@ -1,5 +1,6 @@
 from packages.Items.addItem import __get_userid_from_key
 from packages.Database import MySQL
+from packages.Shopping import createList
 
 def get_list_ID(session_key):
     userid =  __get_userid_from_key(session_key)
