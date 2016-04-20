@@ -75,7 +75,6 @@ def get_group_by_name(name):
     sql = "SELECT * FROM Grouping WHERE GroupName = %s;"
     cursor.execute(sql, name)
     k = cursor.fetchone()
-    print(k)
     if not k:
         return "NONE"
     else:
