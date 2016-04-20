@@ -167,7 +167,7 @@ def service_request(data, connection):
 			groupid = ""
 		if quantity == "Error":
 			quantity = ""
-		
+
 		item = []
 		if groupid != "":
 			item = [[groupid, quantity]]
@@ -233,6 +233,7 @@ def service_request(data, connection):
 		session_key = value_from_header(data, 'sessionkey')
 		result = replace_commas_with_semicolons(get_shopping_lists(session_key))
 		result = result[1:-1]
+		print(result)
 		kwlog.log(result)
 
 	if command == "addshoppinglistitem":
