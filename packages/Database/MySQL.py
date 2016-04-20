@@ -659,3 +659,12 @@ def get_email_for_user(userid):
     sql = "SELECT Email FROM User_Information WHERE UserID = %s;"
     cursor.execute(sql, userid)
     return str(cursor.fetchone()[0])
+
+def get_shopping_list_id_for_user(userid):
+    sql = "SELECT ID FROM ShoppingList WHERE UserID = %s;"
+    cursor.execute(sql, userid)
+    k = cursor.fetchone()
+    if k:
+        return k[0]
+    else:
+        return "NONE"

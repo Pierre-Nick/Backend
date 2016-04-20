@@ -22,6 +22,7 @@ from packages.Shopping.getList import get_shopping_lists
 from packages.Shopping.addItem import add_item_to_list
 from packages.Shopping.removeItem import remove_item_from_list, remove_all_items_from_list
 from packages.Shopping.sendList import send_list
+from packages.Shopping.getListID import get_list_ID
 worker_cap = 7
 job_queue = []
 job_queue_blocked = False
@@ -233,7 +234,6 @@ def service_request(data, connection):
 		session_key = value_from_header(data, 'sessionkey')
 		result = replace_commas_with_semicolons(get_shopping_lists(session_key))
 		result = result[1:-1]
-		print(result)
 		kwlog.log(result)
 
 	if command == "addshoppinglistitem":
@@ -242,7 +242,6 @@ def service_request(data, connection):
 		quantity = value_from_header(data, 'quantity')
 		listid = value_from_header(data, 'listid')
 		result =  add_item_to_list(groupid, quantity, listid, sessionkey)
-		print(result)
 
 	if command == "removeshoppinglistitem":
 		listid = value_from_header(data, 'listid')
@@ -258,6 +257,10 @@ def service_request(data, connection):
 		sessionkey = value_from_header(data, 'sessionkey')
 		listid = value_from_header(data, 'listid')
 		result = send_list(listid, sessionkey)
+
+	if command = "getshoppinglistid":
+		sessionkey = value_from_header(data, 'sessionkey')
+		result = get_list_ID(sessionkey)
 
 	kwlog.log("Result: " + str(result))
 	send(result, connection)
