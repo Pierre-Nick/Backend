@@ -258,7 +258,7 @@ def service_request(data, connection):
 		listid = value_from_header(data, 'listid')
 		result = send_list(listid, sessionkey)
 
-	if command = "getshoppinglistid":
+	if command == "getshoppinglistid":
 		sessionkey = value_from_header(data, 'sessionkey')
 		result = get_list_ID(sessionkey)
 
