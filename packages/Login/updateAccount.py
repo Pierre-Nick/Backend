@@ -84,19 +84,19 @@ def update_account_activation_stats(code):
             if __check_code(userid, code):
                 if __update_act_status(userid):
                     kwlog.log("Account activated")
-                    return True
+                    return "<html> <head> <title>Everyone Loves kitchen Wizard!</title> </head><body><h1>Your Account Has Been Activated</h1></body></html>"
                 else:
                     kwlog.log("DB error occured")
-                    return False
+                    return "<html><head> <title>Everyone Loves kitchen Wizard!</title> </head><body><h1>Your Account Has Not Been Activated</h1></body></html>"
             else:
                 kwlog.log("Bad activation code")
-                return False
+                return "<html> <head> <title>Everyone Loves kitchen Wizard!</title> </head><body><h1>Your Account Has Not Been Activated</h1></body></html>"
         else:
             kwlog.log("Account already activated")
-            return False
+            return "<html> <head> <title>Everyone Loves kitchen Wizard!</title> </head><body><h1>Your Account Has Not Been Activated</h1></body></html>"
     else:
         kwlog.log("Userid not found")
-        return False
+        return "<html> <head> <title>Everyone Loves kitchen Wizard!</title> </head><body><h1>Your Account Has Not Been Activated</h1></body></html>"
 
 
 def update_account_information(fname, lname, email, password, sessionkey):
