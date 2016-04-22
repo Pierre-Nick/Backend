@@ -88,6 +88,7 @@ def uppdate_session_key(username, ses):
 def check_active_status(username):
     # Checks if account has been activated
     # Return bool
+    print(MySQL.get_active_status(username)[0])
     if MySQL.get_active_status(username)[0] == 0:
         kwlog.log("Account not activated")
         return False
