@@ -34,7 +34,7 @@ def get_list_of_ingredients(session_key, recipeid):
         if ingredients is None:
             return ""
         for ingredient in ingredients:
-            result += str(get_group_name_from_group_id(ingredient[0])[0])+ "--" + str(ingredient[1])+"\n"
+            result += str(get_group_name_from_group_id(ingredient[0])[0])+ "-" + str(ingredient[1])+"\n"
         return result
     except:
         if kwlog.debug:
