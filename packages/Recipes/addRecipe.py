@@ -44,15 +44,11 @@ def add_recipe(session_key, recipe):
         kwlog.log("Invaild session key")
         return "BAD_KEY"
     else:
-        if (len(recipe[0]) > 0) and (len(recipe[1]) > 0) and (len(recipe[2]) > 0) and (recipe[4] > 0) and (recipe[5] > 0):
+        if (len(recipe[0]) > 0) and (len(recipe[1]) > 0) and (recipe[4] > 0) and (recipe[5] > 0):
             if not (__check_args(recipe)):
                 return "INVAILD_FORMAT"
             if __create_recipe(recipe, userid):
-                rid = MySQL.get_recipe_id(str(recipe[0]), userid)
-                if __add_items_to_recipe(recipe[2], rid):
                     return "COMPLETE"
-                else:
-                    return "FAILED_TO_ADD_ITEMS_TO_RECIPE"
             else:
                 return "FAILED_TO_ADD_RECIPE"
         else:
