@@ -219,9 +219,8 @@ def service_request(data, connection):
 		cooktime = value_from_header(data, 'cooktime')
 		if cooktime == "Error":
                         cooktime = -1
-		ingredients = value_from_header(data, 'ingredients')
 		image = ''
-		ingredients = parse_ingredients(ingredients)
+		ingredients = []
 		recipe = [name,des,ingredients,image,int(preptime),int(cooktime)]
 		kwlog.log(str(recipe))
 		result = add_recipe(session_key, recipe)
