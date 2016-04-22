@@ -427,6 +427,7 @@ def update_group_of_item(groupid, barcode):
 
 def update_recipe_name(name, rec_id):
     sql = "UPDATE Recipe SET Name = %s WHERE RecipeID = %s;"
+    kwlog.log("SQL update request")
     try:
         cursor.execute(sql, (name, rec_id))
         db.commit()
